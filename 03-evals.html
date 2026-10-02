@@ -1,0 +1,239 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>html{color-scheme:light}body{margin:0}img{max-width:100%}[hidden]{display:none!important}.back{font-family:var(--body);font-weight:700;color:var(--blue);text-decoration:none;font-size:15px;align-self:flex-start}.back:hover,.back:focus-visible{text-decoration:underline}</style>
+<title>Testing AI with Evals</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600&family=Nunito:wght@400;700&display=swap">
+<style>
+/* Layout: picture-book strip; each panel = big drawing + one line + 3 detail cards */
+:root{
+  --bg:#EEF3F6; --card:#FFFFFF; --ink:#1B2A38; --muted:#5B6B7A;
+  --blue:#2E64E8; --sun:#F4A51C; --mint:#2FA67F; --rose:#E0566B; --line:#D3DDE6;
+  --display:"Fredoka","Avenir Next",system-ui,sans-serif;
+  --body:"Nunito","Avenir Next",system-ui,sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#111922; --card:#1A2531; --ink:#E6EEF5; --muted:#9AAABA;
+  --blue:#6F97FF; --sun:#F7B947; --mint:#4CC79C; --rose:#F07A8B; --line:#2C3A48; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#111922; --card:#1A2531; --ink:#E6EEF5; --muted:#9AAABA;
+  --blue:#6F97FF; --sun:#F7B947; --mint:#4CC79C; --rose:#F07A8B; --line:#2C3A48; color-scheme:dark}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:17px;line-height:1.6}
+.wrap{max-width:760px;margin:0 auto;padding-inline:16px;padding-block:40px 64px;display:flex;flex-direction:column;gap:28px}
+header h1{font-family:var(--display);font-weight:600;font-size:clamp(34px,7vw,54px);line-height:1.15;margin:0;text-wrap:balance}
+header p{color:var(--muted);margin:10px 0 0;font-size:18px}
+.panel{background:var(--card);border:2px solid var(--line);border-radius:22px;padding:22px 22px 24px;display:flex;flex-direction:column;gap:12px}
+.step{font-family:var(--display);color:var(--blue);font-size:15px;letter-spacing:.08em}
+.panel h2{font-family:var(--display);font-weight:600;font-size:clamp(24px,4.6vw,32px);margin:0;line-height:1.2;text-wrap:balance}
+.panel p{margin:0;color:var(--muted);max-width:60ch}
+.panel p b{color:var(--ink)}
+svg{width:100%;height:auto;display:block}
+svg text{font-family:var(--body);fill:var(--ink)}
+.f-blue{fill:var(--blue)} .f-sun{fill:var(--sun)} .f-mint{fill:var(--mint)} .f-rose{fill:var(--rose)} .f-line{fill:var(--line)} .f-bg{fill:var(--bg)} .f-card{fill:var(--card)}
+.s-ink{stroke:var(--ink)} .s-line{stroke:var(--line)} .s-muted{stroke:var(--muted)} .s-rose{stroke:var(--rose)} .s-mint{stroke:var(--mint)} .s-blue{stroke:var(--blue)}
+text.w{fill:#fff} text.m{fill:var(--muted)} text.b{fill:var(--blue)} text.r{fill:var(--rose)} text.g{fill:var(--mint)}
+.more{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-top:6px}
+.mc{background:var(--bg);border-radius:14px;padding:14px 16px;display:flex;flex-direction:column;gap:8px;min-width:0;font-size:15.5px}
+.mc h3{margin:0;font-family:var(--display);font-weight:600;font-size:18px;color:var(--blue)}
+.mc.warn h3{color:var(--rose)}
+.mc p{max-width:none}
+table{border-collapse:collapse;width:100%;font-size:15.5px}
+.tw{overflow-x:auto}
+th,td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-weight:700;color:var(--ink)} td{color:var(--muted)}
+.sum{background:var(--ink);color:var(--bg);border-radius:22px;padding:24px}
+.sum h2{font-family:var(--display);font-weight:600;margin:0 0 10px;font-size:28px}
+.sum ol{margin:0;padding-left:1.3em;display:flex;flex-direction:column;gap:6px}
+</style>
+
+</head>
+<body>
+<div class="wrap">
+<a class="back" href="index.html">&larr; All lessons</a>
+<header>
+  <h1>Evals:<br>Giving AI a Test</h1>
+  <p>When a company decides whether to launch an AI tool, this test score is what it looks at.</p>
+</header>
+
+<section class="panel">
+  <div class="step">Panel 1 · Why test at all</div>
+  <h2>"I tried it a few times and it seemed fine" doesn't count</h2>
+  <svg viewBox="0 0 640 220" role="img" aria-label="Going by feel versus using a real test">
+    <rect x="10" y="10" width="300" height="160" rx="18" class="f-bg s-line" stroke-width="2"/>
+    <text x="30" y="44" font-size="19">Going by feel</text>
+    <text x="30" y="80" font-size="16" class="m">Tried 5 questions, all good</text>
+    <text x="30" y="110" font-size="16" class="m">→ "Ready to launch!"</text>
+    <text x="30" y="148" font-size="16" class="r">After launch: fails question #37</text>
+    <rect x="330" y="10" width="300" height="160" rx="18" class="f-blue"/>
+    <text x="350" y="44" font-size="19" class="w">Using a test</text>
+    <text x="350" y="80" font-size="16" class="w">200 real work questions</text>
+    <text x="350" y="110" font-size="16" class="w">184 right = 92%</text>
+    <text x="350" y="148" font-size="16" class="w">Check why each of the 16 missed</text>
+    <text x="10" y="205" font-size="15" class="m">Illustrative numbers</text>
+  </svg>
+  <p>AI can answer differently each time, and it breaks in places you'd never expect. <b>Only testing it on lots of questions shows how good it really is.</b> Same reason you don't judge a pitcher on five pitches: you look at the whole game log.</p>
+</section>
+
+<section class="panel">
+  <div class="step">Panel 2 · Three ways to grade</div>
+  <h2>Who marks the test?</h2>
+  <svg viewBox="0 0 640 260" role="img" aria-label="Code checks the answer, people grade, or an AI acts as judge">
+    <g font-size="18">
+      <rect x="10" y="20" width="195" height="160" rx="16" class="f-mint"/>
+      <text x="30" y="56" class="w">① Code checks</text>
+      <text x="30" y="88" font-size="15" class="w">Has a set answer:</text>
+      <text x="30" y="110" font-size="15" class="w">labels, data, math</text>
+      <text x="30" y="142" font-size="15" class="w">Fast, cheap,</text>
+      <text x="30" y="164" font-size="15" class="w">consistent</text>
+      <rect x="222" y="20" width="195" height="160" rx="16" class="f-sun"/>
+      <text x="242" y="56" class="w">② People grade</text>
+      <text x="242" y="88" font-size="15" class="w">Go item by item</text>
+      <text x="242" y="110" font-size="15" class="w">on tone, expertise</text>
+      <text x="242" y="142" font-size="15" class="w">Most accurate,</text>
+      <text x="242" y="164" font-size="15" class="w">but slow and costly</text>
+      <rect x="434" y="20" width="195" height="160" rx="16" class="f-blue"/>
+      <text x="454" y="56" class="w">③ AI as judge</text>
+      <text x="454" y="88" font-size="15" class="w">Another AI grades</text>
+      <text x="454" y="110" font-size="15" class="w">using the rubric</text>
+      <text x="454" y="142" font-size="15" class="w">Fast, but needs</text>
+      <text x="454" y="164" font-size="15" class="w">checking first</text>
+    </g>
+    <text x="10" y="214" font-size="16" class="m">In practice they're mixed: code wherever it can judge, an AI judge</text>
+    <text x="10" y="238" font-size="16" class="m">for the rest, and people double-check a sample.</text>
+  </svg>
+  <p>The grading rules should be <b>specific things you can check</b>, like "Did it quote the source?" or "Did it mention the refund deadline?"</p>
+  <div class="more">
+    <div class="mc"><h3>Think of it like</h3><p>A machine marks the multiple choice; the teacher marks the essays. When there are too many essays, a TA marks them using the rubric, and the teacher spot-checks whether the TA got it right.</p></div>
+    <div class="mc"><h3>How it actually works</h3><p>Using a model as the judge is called "LLM-as-a-judge." You give the judge a rubric and a few already-graded examples, and it returns a score plus its reasons. Before trusting it, you run it on a batch of questions people already graded and see how often it agrees with them.</p></div>
+    <div class="mc warn"><h3>Watch out for AI judges</h3><p>Common biases: they like longer answers, they like whichever option comes first, and they like answers that sound like themselves. When comparing two answers, swap the order and test both ways.</p></div>
+  </div>
+</section>
+
+<section class="panel">
+  <div class="step">Panel 3 · Where the questions come from</div>
+  <h2>The best questions come from real work</h2>
+  <svg viewBox="0 0 640 220" role="img" aria-label="Three sources of test questions">
+    <g font-size="17">
+      <rect x="10" y="20" width="620" height="50" rx="12" class="f-bg"/>
+      <rect x="10" y="20" width="360" height="50" rx="12" class="f-blue"/>
+      <text x="26" y="52" class="w">Everyday: real tickets, real asks</text><text x="386" y="52" class="m">Most of the test</text>
+      <rect x="10" y="84" width="620" height="50" rx="12" class="f-bg"/>
+      <rect x="10" y="84" width="200" height="50" rx="12" class="f-sun"/>
+      <text x="26" y="116" class="w">Tricky ones</text><text x="226" y="116" class="m">Edge cases, vague asks, no answer in docs</text>
+      <rect x="10" y="148" width="620" height="50" rx="12" class="f-bg"/>
+      <rect x="10" y="148" width="200" height="50" rx="12" class="f-rose"/>
+      <text x="26" y="180" class="w">Mistake log</text><text x="226" y="180" class="m">Every live failure becomes a new question</text>
+    </g>
+  </svg>
+  <p>This set of questions is often called a <b>"golden dataset"</b>: the questions plus agreed-on good answers or grading rules.</p>
+  <div class="more">
+    <div class="mc"><h3>Think of it like</h3><p>A driving test doesn't just check driving in a straight line. It specifically tests parallel parking and starting on a hill. Wherever people usually mess up is exactly what the test should cover.</p></div>
+    <div class="mc"><h3>How it actually works</h3><p>You can start with a few dozen questions. No need to wait until you have thousands. What matters is that they reflect how the tool is really used, and that someone who knows the work signs off on "what counts as a good answer."</p></div>
+    <div class="mc warn"><h3>Common myth</h3><p><b>"Just have the AI write its own test."</b> You can use it to add more questions, but if you only test it on questions it can think of, you'll never find the blind spots it can't.</p></div>
+  </div>
+</section>
+
+<section class="panel">
+  <div class="step">Panel 4 · Public leaderboards vs. your own test</div>
+  <h2>Top of the class doesn't mean good at your job</h2>
+  <svg viewBox="0 0 640 215" role="img" aria-label="A high leaderboard score doesn't mean better results on your own work">
+    <g font-size="17">
+      <text x="10" y="30">Public leaderboard</text>
+      <rect x="10" y="44" width="280" height="30" rx="8" class="f-blue"/><text x="300" y="66">Model A</text>
+      <rect x="10" y="82" width="240" height="30" rx="8" class="f-line"/><text x="260" y="104" class="m">Model B</text>
+      <text x="360" y="30">Your customer-service test</text>
+      <rect x="360" y="44" width="160" height="30" rx="8" class="f-line"/><text x="530" y="66" class="m">Model A</text>
+      <rect x="360" y="82" width="230" height="30" rx="8" class="f-mint"/>
+    </g>
+    <text x="370" y="104" font-size="17" class="w">Model B</text>
+    <text x="10" y="150" font-size="17">Leaderboards test general skills. Your business has</text>
+    <text x="10" y="174" font-size="17">its own documents, jargon and rules.</text>
+    <text x="10" y="204" font-size="15" class="m">Illustrative only, not real scores for any model</text>
+  </svg>
+  <p>Public leaderboards (benchmarks) are good for a <b>first cut</b>. The final call should come from <b>your own test</b>.</p>
+  <div class="more">
+    <div class="mc"><h3>Think of it like</h3><p>When hiring, a degree gets someone through the first round, but what decides it is the interview and how they actually do on your team.</p></div>
+    <div class="mc"><h3>How it actually works</h3><p>Public benchmark questions have been out there for so long that they may have leaked into a model's training data, which inflates its score. That's called "data contamination." And every AI company shows off the leaderboards that make it look best, so they're hard to compare directly.</p></div>
+    <div class="mc warn"><h3>Common myth</h3><p><b>"Pick whichever model is #1 on the leaderboard and you're safe."</b> For a lot of real work, a cheap small model with good RAG and good prompts does just as well as a big one on your own test.</p></div>
+  </div>
+</section>
+
+<section class="panel">
+  <div class="step">Panel 5 · What subjects to test</div>
+  <h2>It's not just "right or wrong"</h2>
+  <div class="tw"><table>
+    <tr><th>Subject</th><th>The question</th></tr>
+    <tr><td><b>Accuracy</b></td><td>Is the answer right?</td></tr>
+    <tr><td><b>Backed by sources</b></td><td>When using RAG, can every sentence be traced back to the documents? Did it make anything up?</td></tr>
+    <tr><td><b>Completion rate</b></td><td>How often does an agent finish its task from start to end? How many steps does it take on average?</td></tr>
+    <tr><td><b>Safety and rules</b></td><td>Did it refuse what it should refuse? Did it leak anything it shouldn't?</td></tr>
+    <tr><td><b>Format and tone</b></td><td>Does it follow the company's style? Is it pleasant for customers to read?</td></tr>
+    <tr><td><b>Speed and cost</b></td><td>How long does it take? How many tokens, and how much money, per answer?</td></tr>
+  </table></div>
+  <p>Which subjects matter most depends on the job. Customer service cares most about tone and accuracy; finance cares most about accuracy and following the rules.</p>
+</section>
+
+<section class="panel">
+  <div class="step">Panel 6 · Change something, test again</div>
+  <h2>The test is your progress dashboard</h2>
+  <svg viewBox="0 0 640 240" role="img" aria-label="After each change the test is re-run and the score moves">
+    <line x1="60" y1="190" x2="620" y2="190" class="s-line" stroke-width="2"/>
+    <polyline points="90,150 200,118 310,126 420,80 540,64" fill="none" class="s-blue" stroke-width="4" stroke-linejoin="round"/>
+    <g>
+      <circle cx="90" cy="150" r="7" class="f-blue"/><circle cx="200" cy="118" r="7" class="f-blue"/>
+      <circle cx="310" cy="126" r="9" class="f-rose"/><circle cx="420" cy="80" r="7" class="f-blue"/><circle cx="540" cy="64" r="9" class="f-mint"/>
+    </g>
+    <g font-size="14" class="m">
+      <text x="90" y="212" class="m" text-anchor="middle">First version</text><text x="200" y="212" class="m" text-anchor="middle">New prompt</text><text x="310" y="212" class="m" text-anchor="middle">New model</text><text x="420" y="212" class="m" text-anchor="middle">New chunks</text><text x="540" y="212" class="m" text-anchor="middle">Add checks</text>
+    </g>
+    <text x="250" y="156" font-size="15" class="r">Score dropped → roll it back</text>
+    <text x="490" y="44" font-size="15" class="g">Ready to launch</text>
+    <text x="10" y="236" font-size="15" class="m">Illustrative curve</text>
+  </svg>
+  <p>Without a test, every change is a guess. With one, <b>you can see right away whether each change helped</b>, and you'll catch it the moment something gets worse.</p>
+  <div class="more">
+    <div class="mc"><h3>Think of it like</h3><p>Weighing yourself every day while trying to lose weight. You could skip it, but then you'd never know which change actually worked, or notice when the weight started creeping back.</p></div>
+    <div class="mc"><h3>How it actually works</h3><p>The test gets plugged into an automatic pipeline: after you change a prompt, swap models or update the documents, it re-runs on its own and raises an alarm if the score drops. In software this is called "regression testing." When the AI company releases a new version of its model, you re-run it too.</p></div>
+    <div class="mc warn"><h3>Common myth</h3><p><b>"Testing once before launch is enough."</b> Real users keep coming up with new situations. You need to keep grading samples and add every new failure to the test.</p></div>
+  </div>
+</section>
+
+<section class="panel">
+  <div class="step">Panel 7 · The business view</div>
+  <h2>Evals are the shared language between buyer and seller</h2>
+  <svg viewBox="0 0 640 245" role="img" aria-label="Agree on the bar before a pilot, run the test during it, and keep checking after launch">
+    <g font-size="17">
+      <rect x="10" y="20" width="195" height="130" rx="16" class="f-blue"/>
+      <text x="30" y="56" class="w">Before the pilot</text><text x="30" y="88" font-size="15" class="w">Set with the client:</text><text x="30" y="110" font-size="15" class="w">what to test and</text><text x="30" y="132" font-size="15" class="w">what score passes</text>
+      <rect x="222" y="20" width="195" height="130" rx="16" class="f-sun"/>
+      <text x="242" y="56" class="w">During the pilot</text><text x="242" y="88" font-size="15" class="w">Run the test on the</text><text x="242" y="110" font-size="15" class="w">client's own data,</text><text x="242" y="132" font-size="15" class="w">share a report card</text>
+      <rect x="434" y="20" width="195" height="130" rx="16" class="f-mint"/>
+      <text x="454" y="56" class="w">After launch</text><text x="454" y="88" font-size="15" class="w">Keep grading samples,</text><text x="454" y="110" font-size="15" class="w">review each quarter</text><text x="454" y="132" font-size="15" class="w">with the client</text>
+    </g>
+    <path d="M209 85 L218 85" class="s-muted" stroke-width="3"/><path d="M421 85 L430 85" class="s-muted" stroke-width="3"/>
+    <text x="10" y="182" font-size="17">Write down what success looks like first, or the pilot ends</text>
+    <text x="10" y="206" font-size="17">with "Seems fine… let's keep watching."</text>
+    <text x="10" y="234" font-size="15" class="m">This is a big part of the job for people who roll out AI at companies</text>
+  </svg>
+  <p>For a client, <b>a report card based on their own data</b> is more convincing than any demo.</p>
+</section>
+
+<section class="sum">
+  <h2>Remember it in one line each</h2>
+  <ol>
+    <li><b>Eval</b> = a fixed set of test questions used to check how well an AI performs, at scale</li>
+    <li>Grading: code checks the answer, people score it, or an AI judges it. Usually a mix</li>
+    <li>The best questions come from real work, plus tricky ones and a mistake log</li>
+    <li>Public leaderboards are a first cut; your own test makes the call</li>
+    <li>Re-test after every change, and keep spot-checking after launch</li>
+    <li>Before a pilot, agree with the client on what score counts as a pass</li>
+  </ol>
+</section>
+</div>
+
+</body>
+</html>

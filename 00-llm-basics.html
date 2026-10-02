@@ -1,0 +1,284 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>html{color-scheme:light}body{margin:0}img{max-width:100%}[hidden]{display:none!important}.back{font-family:var(--body);font-weight:700;color:var(--blue);text-decoration:none;font-size:15px;align-self:flex-start}.back:hover,.back:focus-visible{text-decoration:underline}</style>
+<title>How AI Chatbots Work</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600&family=Nunito:wght@400;700&display=swap">
+<style>
+/* Layout: one tall picture-book strip; each concept = one big drawing + one line */
+:root{
+  --bg:#EEF3F6; --card:#FFFFFF; --ink:#1B2A38; --muted:#5B6B7A;
+  --blue:#2E64E8; --sun:#F4A51C; --mint:#2FA67F; --rose:#E0566B; --line:#D3DDE6;
+  --display:"Fredoka","Avenir Next",system-ui,sans-serif;
+  --body:"Nunito","Avenir Next",system-ui,sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#111922; --card:#1A2531; --ink:#E6EEF5; --muted:#9AAABA;
+  --blue:#6F97FF; --sun:#F7B947; --mint:#4CC79C; --rose:#F07A8B; --line:#2C3A48; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#111922; --card:#1A2531; --ink:#E6EEF5; --muted:#9AAABA;
+  --blue:#6F97FF; --sun:#F7B947; --mint:#4CC79C; --rose:#F07A8B; --line:#2C3A48; color-scheme:dark}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:17px;line-height:1.6}
+.wrap{max-width:760px;margin:0 auto;padding-inline:16px;padding-block:40px 64px;display:flex;flex-direction:column;gap:28px}
+header h1{font-family:var(--display);font-weight:600;font-size:clamp(34px,7vw,54px);line-height:1.15;margin:0;text-wrap:balance}
+header p{color:var(--muted);margin:10px 0 0;font-size:18px}
+.panel{background:var(--card);border:2px solid var(--line);border-radius:22px;padding:22px 22px 24px;display:flex;flex-direction:column;gap:12px}
+.step{font-family:var(--display);color:var(--blue);font-size:15px;letter-spacing:.08em}
+.panel h2{font-family:var(--display);font-weight:600;font-size:clamp(24px,4.6vw,32px);margin:0;line-height:1.2;text-wrap:balance}
+.panel p{margin:0;color:var(--muted);max-width:60ch}
+.panel p b{color:var(--ink)}
+svg{width:100%;height:auto;display:block}
+svg text{font-family:var(--body);fill:var(--ink)}
+.f-ink{fill:var(--ink)} .f-blue{fill:var(--blue)} .f-sun{fill:var(--sun)} .f-mint{fill:var(--mint)} .f-rose{fill:var(--rose)} .f-line{fill:var(--line)} .f-bg{fill:var(--bg)} .f-card{fill:var(--card)} .f-muted{fill:var(--muted)}
+.s-ink{stroke:var(--ink)} .s-line{stroke:var(--line)} .s-blue{stroke:var(--blue)} .s-muted{stroke:var(--muted)}
+text.w{fill:#fff} text.m{fill:var(--muted)} text.b{fill:var(--blue)}
+.sum{background:var(--ink);color:var(--bg);border-radius:22px;padding:24px}
+.more{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-top:6px}
+.mc{background:var(--bg);border-radius:14px;padding:14px 16px;display:flex;flex-direction:column;gap:8px;min-width:0;font-size:15.5px}
+.mc h3{margin:0;font-family:var(--display);font-weight:600;font-size:18px;color:var(--blue)}
+.mc.warn h3{color:var(--rose)}
+.mc p{max-width:none}
+.sum h2{font-family:var(--display);font-weight:600;margin:0 0 10px;font-size:28px}
+.sum ol{margin:0;padding-left:1.3em;display:flex;flex-direction:column;gap:6px}
+@media (prefers-reduced-motion:no-preference){.blink{animation:bl 1s steps(1) infinite}@keyframes bl{50%{opacity:0}}}
+</style>
+
+</head>
+<body>
+<div class="wrap">
+<a class="back" href="index.html">&larr; All lessons</a>
+<header>
+  <h1>A large language model<br>is a next-word champion</h1>
+  <p>8 pictures that show what AIs like ChatGPT and Claude are actually doing. Under each one: an analogy, how it really works, and a common myth.</p>
+</header>
+
+<section class="panel">
+  <div class="step">PICTURE 1 · THE ONE TRICK</div>
+  <h2>It does one thing: guess the next word</h2>
+  <svg viewBox="0 0 640 250" role="img" aria-label="The weather today is really ... followed by nice, hot or cold with their probabilities">
+    <rect x="20" y="22" width="300" height="88" rx="14" class="f-bg s-line" stroke-width="2"/>
+    <text x="40" y="58" font-size="24">The weather today</text>
+    <text x="40" y="92" font-size="24">is really</text>
+    <rect x="150" y="72" width="4" height="28" class="f-blue blink"/>
+    <path d="M330 66 C360 66 360 66 392 66" class="s-muted" stroke-width="3" fill="none" stroke-dasharray="6 6"/>
+    <g font-size="22">
+      <text x="404" y="51">nice</text><rect x="462" y="30" width="140" height="28" rx="8" class="f-mint"/><text x="472" y="51" font-size="17" class="w">70%</text>
+      <text x="404" y="109">hot</text><rect x="462" y="88" width="42" height="28" rx="8" class="f-sun"/><text x="512" y="109" font-size="17" class="m">20%</text>
+      <text x="404" y="167">cold</text><rect x="462" y="146" width="20" height="28" rx="8" class="f-rose"/><text x="490" y="167" font-size="17" class="m">10%</text>
+    </g>
+    <text x="20" y="225" font-size="18" class="m">Pick one → add it → guess the next → repeat = a whole answer</text>
+  </svg>
+  <p>That long answer you see? It was built <b>one word at a time</b>.</p>
+
+  <div class="more">
+    <div class="mc"><h3>Think of it like…</h3><p>The next-word suggestions on your phone keyboard. The difference: it has read a ridiculous amount of text, and it can take tens of thousands of earlier words into account before suggesting the next one.</p></div>
+    <div class="mc"><h3>How it actually works</h3><p>At every step it gives a score (a probability) to every block in its “dictionary,” picks one, adds it on, then re-reads the whole thing including the new word to guess the next one.</p><p>It doesn't plan the whole answer before it starts. So-called “thinking mode” just has it write a rough draft for itself first, then write the real answer. Still next-word guessing, all the way down.</p></div>
+    <div class="mc warn"><h3>Common myth</h3><p><b>“It only guesses words, so it's dumb.”</b> To guess the next word well, you have to understand grammar, facts, logic, even how code will run. Trying to “guess well” forced out a lot of abilities that look a lot like understanding.</p></div>
+  </div>
+</section>
+
+<section class="panel">
+  <div class="step">PICTURE 2 · TOKENS</div>
+  <h2>Text gets chopped into little building blocks</h2>
+  <svg viewBox="0 0 640 170" role="img" aria-label="Sentences chopped into token blocks: I, love, pi, zza, un, believ, able">
+    <g font-size="24">
+      <rect x="20" y="30" width="50" height="60" rx="10" class="f-blue"/><text x="38" y="69" class="w">I</text>
+      <rect x="78" y="30" width="86" height="60" rx="10" class="f-sun"/><text x="96" y="69" class="w">love</text>
+      <rect x="172" y="30" width="62" height="60" rx="10" class="f-mint"/><text x="190" y="69" class="w">pi</text>
+      <rect x="242" y="30" width="72" height="60" rx="10" class="f-rose"/><text x="258" y="69" class="w">zza</text>
+      <rect x="336" y="30" width="60" height="60" rx="10" class="f-blue"/><text x="352" y="69" class="w">un</text>
+      <rect x="404" y="30" width="110" height="60" rx="10" class="f-sun"/><text x="422" y="69" class="w">believ</text>
+      <rect x="522" y="30" width="90" height="60" rx="10" class="f-mint"/><text x="540" y="69" class="w">able</text>
+    </g>
+    <g font-size="17" class="m"><text x="20" y="125" class="m">→ Each block becomes an ID number, like 3812, 907, 15496…</text>
+    <text x="20" y="152" class="m">How text gets chopped depends on the model's “dictionary” (Illustrative)</text></g>
+  </svg>
+  <p>The model doesn't know “words.” It only knows <b>block numbers</b>. And it counts everything in blocks: the longer the chat, the more blocks.</p>
+
+  <div class="more">
+    <div class="mc"><h3>Think of it like…</h3><p>LEGO. A common word is one ready-made piece. A rare word gets built from a few smaller pieces.</p></div>
+    <div class="mc"><h3>How it actually works</h3><p>Rule of thumb for English: 1 token ≈ 4 letters ≈ ¾ of a word. A Chinese character often takes 1–2 tokens each, depending on the model.</p><p>Pricing, length limits and speed are all counted in tokens. The same idea can cost more “blocks” in some languages than others.</p></div>
+    <div class="mc warn"><h3>Common myth</h3><p><b>“It can see every letter.”</b> It sees block numbers, not letters. That's why questions like “how many r's are in strawberry?” used to trip up early models.</p></div>
+  </div>
+</section>
+
+<section class="panel">
+  <div class="step">PICTURE 3 · TRAINING</div>
+  <h2>First, it reads an entire library</h2>
+  <svg viewBox="0 0 640 220" role="img" aria-label="A huge pile of books flowing into a brain">
+    <g>
+      <rect x="30" y="150" width="170" height="26" rx="4" class="f-blue"/>
+      <rect x="40" y="122" width="150" height="26" rx="4" class="f-sun"/>
+      <rect x="25" y="94" width="165" height="26" rx="4" class="f-mint"/>
+      <rect x="45" y="66" width="140" height="26" rx="4" class="f-rose"/>
+      <rect x="35" y="38" width="155" height="26" rx="4" class="f-blue"/>
+    </g>
+    <text x="24" y="206" font-size="16" class="m">Websites, books, code, papers…</text>
+    <path d="M220 110 L360 110" class="s-muted" stroke-width="4" fill="none" stroke-dasharray="4 10" stroke-linecap="round"/>
+    <path d="M350 98 L368 110 L350 122" class="s-muted" stroke-width="4" fill="none" stroke-linecap="round"/>
+    <circle cx="480" cy="110" r="80" class="f-bg s-ink" stroke-width="3"/>
+    <text x="480" y="90" font-size="20" text-anchor="middle">Endless</text>
+    <text x="480" y="116" font-size="20" text-anchor="middle">fill in</text>
+    <text x="480" y="142" font-size="20" text-anchor="middle">the blank</text>
+    <text x="480" y="215" font-size="16" class="m" text-anchor="middle">Wrong guess → tiny tweak</text>
+  </svg>
+  <p>Training means: hide the next word, make it guess, and adjust it when it's wrong. After <b>an astronomical number of rounds</b>, it has picked up grammar, common knowledge and how people talk.</p>
+
+  <div class="more">
+    <div class="mc"><h3>Think of it like…</h3><p>A student who does trillions of fill-in-the-blank questions. No teacher, no lessons. After each one, they just check against the original text.</p></div>
+    <div class="mc"><h3>How it actually works</h3><p>This is called “self-supervised” learning: the answer is just the next word in the original text, so nobody has to label anything by hand. That's why it can use such huge amounts of text.</p><p>Training runs on lots of GPUs for weeks to months. When it's done, the knowledge is “frozen.” So every model has a <b>knowledge cutoff date</b>. It doesn't know what happened after that, unless it's hooked up to web search.</p></div>
+    <div class="mc warn"><h3>Common myth</h3><p><b>“It saved all the websites and looks things up when it answers.”</b> Nope. There's no database of the original text inside. What it learned are patterns, squeezed into its parameters. A few bits of text that showed up many, many times, it might be able to recite.</p></div>
+  </div>
+</section>
+
+<section class="panel">
+  <div class="step">PICTURE 4 · PARAMETERS</div>
+  <h2>What it learns is stored in a pile of tiny knobs</h2>
+  <svg viewBox="0 0 640 222" role="img" aria-label="A panel made of many knobs">
+    <rect x="20" y="16" width="600" height="150" rx="16" class="f-bg s-line" stroke-width="2"/>
+    <g id="knobs"></g>
+    <text x="20" y="192" font-size="17" class="m">Real models have billions to trillions of knobs.</text>
+    <text x="20" y="216" font-size="17" class="m">That's the “parameter count” — e.g. 7B = 7 billion.</text>
+  </svg>
+  <p>Every wrong guess <b>nudges these knobs a tiny bit</b>. More knobs means it can capture finer patterns.</p>
+
+  <div class="more">
+    <div class="mc"><h3>Think of it like…</h3><p>A giant mixing board. One knob on its own means nothing. The positions of billions of knobs together decide “after seeing these blocks, which block comes next?”</p></div>
+    <div class="mc"><h3>How it actually works</h3><p>Each parameter is just a number (also called a weight). Training uses a method called “backpropagation” to work out which way to turn each knob, and how far.</p><p>The B in “7B” stands for billion: 7 billion parameters. The model's file size is roughly the number of parameters × the bytes each number takes up.</p></div>
+    <div class="mc warn"><h3>Common myth</h3><p><b>“More parameters always means smarter.”</b> Data quality, training methods and the later fine-tuning matter just as much. New small models often beat old big ones. And more parameters also means more expensive and slower to run.</p></div>
+  </div>
+</section>
+
+<section class="panel">
+  <div class="step">PICTURE 5 · CONTEXT WINDOW</div>
+  <h2>Its desk is only so big</h2>
+  <svg viewBox="0 0 640 200" role="img" aria-label="Only a limited number of pages fit on the desk">
+    <rect x="130" y="40" width="380" height="110" rx="12" class="f-bg s-ink" stroke-width="3"/>
+    <text x="134" y="30" font-size="16" class="m">Context window (what it can see at once)</text>
+    <g><rect x="150" y="60" width="70" height="72" rx="6" class="f-card s-line" stroke-width="2"/>
+       <rect x="232" y="60" width="70" height="72" rx="6" class="f-card s-line" stroke-width="2"/>
+       <rect x="314" y="60" width="70" height="72" rx="6" class="f-card s-line" stroke-width="2"/>
+       <rect x="396" y="60" width="96" height="72" rx="6" class="f-blue"/>
+       <text x="406" y="92" font-size="15" class="w">Your new</text>
+       <text x="406" y="112" font-size="15" class="w">question</text></g>
+    <rect x="30" y="80" width="70" height="72" rx="6" class="f-line" transform="rotate(-14 65 116)"/>
+    <text x="22" y="186" font-size="16" class="m">Old stuff that doesn't fit → it can't see it anymore</text>
+  </svg>
+  <p>Your chat history and any files you paste all have to be spread out on this desk. <b>When the desk is full, the oldest stuff gets pushed off</b>, and it “forgets.”</p>
+
+  <div class="more">
+    <div class="mc"><h3>Think of it like…</h3><p>An open-book test where your desk only fits a few pages. No matter how many books are on the shelf, anything not open on the desk is invisible.</p></div>
+    <div class="mc"><h3>How it actually works</h3><p>The window is measured in tokens. It holds: the system instructions + the whole chat so far + any files you pasted + the answer it's writing right now.</p><p>The model itself remembers nothing. Every time you send a message, the app hands it the entire history <b>again</b>. “Memory” features in different apps keep notes on the side and put them back on the desk when needed.</p></div>
+    <div class="mc warn"><h3>Common myth</h3><p><b>“A big window means it remembers everything perfectly.”</b> When it's stuffed full, details buried in the middle are easier to miss. Put the important instructions at the start or the end and you'll get steadier results.</p></div>
+  </div>
+</section>
+
+<section class="panel">
+  <div class="step">PICTURE 6 · TEMPERATURE</div>
+  <h2>One knob decides “safe” or “wild”</h2>
+  <svg viewBox="0 0 640 234" role="img" aria-label="Low temperature picks the most likely word; high temperature is more random">
+    <g>
+      <text x="40" y="36" font-size="20">Low temp ❄</text>
+      <rect x="40" y="56" width="200" height="30" rx="8" class="f-mint"/><text x="250" y="78" font-size="18">nice</text>
+      <rect x="40" y="96" width="20" height="30" rx="8" class="f-line"/><text x="70" y="118" font-size="18" class="m">hot</text>
+      <rect x="40" y="136" width="8" height="30" rx="4" class="f-line"/><text x="58" y="158" font-size="18" class="m">cold</text>
+      <text x="40" y="196" font-size="16" class="m">Almost always the safest pick</text>
+      <text x="40" y="220" font-size="16" class="m">→ good for facts and code</text>
+    </g>
+    <g>
+      <text x="360" y="36" font-size="20">High temp 🔥</text>
+      <rect x="360" y="56" width="110" height="30" rx="8" class="f-mint"/><text x="480" y="78" font-size="18">nice</text>
+      <rect x="360" y="96" width="80" height="30" rx="8" class="f-sun"/><text x="450" y="118" font-size="18">hot</text>
+      <rect x="360" y="136" width="60" height="30" rx="8" class="f-rose"/><text x="430" y="158" font-size="18">cold</text>
+      <text x="360" y="196" font-size="16" class="m">Long-shot words get a chance</text>
+      <text x="360" y="220" font-size="16" class="m">→ good for poems, brainstorming</text>
+    </g>
+  </svg>
+  <p>That's why asking the same question twice can get you different answers. The randomness is <b>on purpose</b>.</p>
+
+  <div class="more">
+    <div class="mc"><h3>Think of it like…</h3><p>Ordering food. Low temperature: you always get your usual. High temperature: sometimes you try something you've never ordered.</p></div>
+    <div class="mc"><h3>How it actually works</h3><p>Temperature controls how “pointy” that probability table is. At low temperature the top pick wins almost every time. At high temperature the gaps shrink, so long shots can get picked too.</p><p>Another common switch is called top-p: it only picks from the top-ranked options that add up to a certain share, so the totally off-the-wall options are cut out.</p></div>
+    <div class="mc warn"><h3>Common myth</h3><p><b>“Higher temperature means more creative and smarter.”</b> Too high and it starts talking nonsense. And setting temperature to 0 still doesn't guarantee the exact same words every time; there are other sources of randomness in the system.</p></div>
+  </div>
+</section>
+
+<section class="panel">
+  <div class="step">PICTURE 7 · FROM BOOKWORM TO ASSISTANT</div>
+  <h2>First read everything, then learn to be an assistant</h2>
+  <svg viewBox="0 0 640 224" role="img" aria-label="Three steps: pretraining, instruction tuning, human feedback">
+    <g font-size="18">
+      <rect x="10" y="40" width="180" height="100" rx="16" class="f-blue"/>
+      <text x="24" y="76" class="w">① Pretraining</text><text x="24" y="104" font-size="14" class="w">Reads tons of text,</text><text x="24" y="122" font-size="14" class="w">learns to continue it</text>
+      <rect x="230" y="40" width="180" height="100" rx="16" class="f-sun"/>
+      <text x="242" y="76" font-size="16" class="w">② Instruction tuning</text><text x="244" y="104" font-size="14" class="w">Studies examples of</text><text x="244" y="122" font-size="14" class="w">question → good answer</text>
+      <rect x="450" y="40" width="180" height="100" rx="16" class="f-mint"/>
+      <text x="464" y="76" class="w">③ Human feedback</text><text x="464" y="104" font-size="14" class="w">People rate which</text><text x="464" y="122" font-size="14" class="w">answer is better</text>
+    </g>
+    <path d="M194 90 L224 90 M214 80 L224 90 L214 100" class="s-muted" stroke-width="3" fill="none"/>
+    <path d="M414 90 L444 90 M434 80 L444 90 L434 100" class="s-muted" stroke-width="3" fill="none"/>
+    <text x="10" y="180" font-size="16" class="m">A step-① only model: ask “What's the capital of France?” and it might</text>
+    <text x="10" y="204" font-size="16" class="m">just keep going: “What's the capital of Germany? Of the UK?”</text>
+  </svg>
+  <p>Steps ② and ③ teach it to <b>understand the question, answer properly, and know where the lines are</b>.</p>
+
+  <div class="more">
+    <div class="mc"><h3>Think of it like…</h3><p>A med school grad knows a ton but can't treat patients yet. Residency teaches how to examine someone, how to talk to patients, and what you should never say.</p></div>
+    <div class="mc"><h3>How it actually works</h3><p>Pretraining uses the vast majority of the computing power. <b>Instruction tuning</b>: show it lots of human-written “question → good answer” examples. <b>Reinforcement learning from human feedback (RLHF)</b>: have it write several answers to the same question, let people rank them, then train it to lean toward the higher-rated style.</p><p>Tone, formatting, when to say no, and safety limits mostly take shape in these two steps. Some approaches have an AI do the scoring based on a written set of principles. Anthropic's Constitutional AI is one example.</p></div>
+    <div class="mc warn"><h3>Common myth</h3><p><b>“Fine-tuning is how you pour new knowledge in.”</b> These two steps mostly change behavior and style. Most of what it knows still comes from pretraining.</p></div>
+  </div>
+</section>
+
+<section class="panel">
+  <div class="step">PICTURE 8 · HALLUCINATIONS</div>
+  <h2>Sounding right isn't the same as being right</h2>
+  <svg viewBox="0 0 640 214" role="img" aria-label="A confident answer with a mistake hidden in it">
+    <rect x="20" y="20" width="440" height="110" rx="20" class="f-bg s-line" stroke-width="2"/>
+    <path d="M60 130 L50 160 L90 130" class="f-bg s-line" stroke-width="2"/>
+    <text x="44" y="62" font-size="20">This book came out in 1987,</text>
+    <text x="44" y="96" font-size="20">written by Professor <tspan class="b" font-weight="700">J. Smith</tspan>.</text>
+    <circle cx="545" cy="75" r="50" class="f-rose"/>
+    <text x="531" y="90" font-size="44" class="w">?</text>
+    <text x="20" y="182" font-size="16" class="m">It's writing the smoothest next words, not looking things up —</text>
+    <text x="20" y="206" font-size="16" class="m">so made-up stuff comes out sounding just as smooth.</text>
+  </svg>
+  <p>Names, numbers, dates and quotes are where it slips up most. <b>For anything important, check the original source.</b></p>
+
+  <div class="more">
+    <div class="mc"><h3>Think of it like…</h3><p>A super smooth talker who never says “I don't know.” Hit a test question they can't answer, and they'll still fill a whole page that sounds pretty convincing.</p></div>
+    <div class="mc"><h3>How it actually works</h3><p>Its goal is to “sound smooth,” not to “be true.” Rare facts show up only a few times in training and are stored fuzzily in its parameters, but it can still produce fluent sentences about them.</p><p>Ways to lower the risk: give it the original material and have it answer only from that; have it search the web and show its sources, then <b>open them yourself</b> and check. Asking it “are you sure?” doesn't help much.</p></div>
+    <div class="mc warn"><h3>Common myth</h3><p><b>“Hallucination is a small bug that'll be fixed soon.”</b> Newer models do hallucinate less, but it comes from the next-word-guessing way it works, so it's hard to get rid of completely. Names, numbers, dates, quotes, and anything about law, medicine or money: always check.</p></div>
+  </div>
+</section>
+
+<section class="sum">
+  <h2>The short version</h2>
+  <ol>
+    <li>Chop text into blocks</li>
+    <li>Read a huge amount of text and learn to guess the next block</li>
+    <li>Store the patterns in billions of knobs</li>
+    <li>Then teach it to be an assistant</li>
+    <li>It talks really well, but checking is your job</li>
+  </ol>
+</section>
+</div>
+
+<script>
+(function(){
+  var g=document.getElementById('knobs'),ns='http://www.w3.org/2000/svg',cls=['f-blue','f-sun','f-mint','f-rose'];
+  for(var r=0;r<3;r++)for(var c=0;c<14;c++){
+    var x=50+c*41,y=46+r*44,a=((r*14+c)*47)%360;
+    var ci=document.createElementNS(ns,'circle');ci.setAttribute('cx',x);ci.setAttribute('cy',y);ci.setAttribute('r',15);ci.setAttribute('class',cls[(r+c)%4]);g.appendChild(ci);
+    var l=document.createElementNS(ns,'line');var rad=a*Math.PI/180;
+    l.setAttribute('x1',x);l.setAttribute('y1',y);l.setAttribute('x2',x+11*Math.cos(rad));l.setAttribute('y2',y+11*Math.sin(rad));
+    l.setAttribute('stroke','#fff');l.setAttribute('stroke-width','3');l.setAttribute('stroke-linecap','round');g.appendChild(l);
+  }
+})();
+</script>
+
+</body>
+</html>

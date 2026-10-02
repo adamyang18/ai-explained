@@ -1,0 +1,177 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>html{color-scheme:light}body{margin:0}img{max-width:100%}[hidden]{display:none!important}.back{font-family:var(--body);font-weight:700;color:var(--blue);text-decoration:none;font-size:15px;align-self:flex-start}.back:hover,.back:focus-visible{text-decoration:underline}</style>
+<title>Open vs Closed AI Models</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600&family=Nunito:wght@400;700&display=swap">
+<style>
+/* Layout: picture-book strip; each panel = big drawing + one line + 3 detail cards */
+:root{
+  --bg:#EEF3F6; --card:#FFFFFF; --ink:#1B2A38; --muted:#5B6B7A;
+  --blue:#2E64E8; --sun:#F4A51C; --mint:#2FA67F; --rose:#E0566B; --line:#D3DDE6;
+  --display:"Fredoka","Avenir Next",system-ui,sans-serif;
+  --body:"Nunito","Avenir Next",system-ui,sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#111922; --card:#1A2531; --ink:#E6EEF5; --muted:#9AAABA;
+  --blue:#6F97FF; --sun:#F7B947; --mint:#4CC79C; --rose:#F07A8B; --line:#2C3A48; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#111922; --card:#1A2531; --ink:#E6EEF5; --muted:#9AAABA;
+  --blue:#6F97FF; --sun:#F7B947; --mint:#4CC79C; --rose:#F07A8B; --line:#2C3A48; color-scheme:dark}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:17px;line-height:1.6}
+.wrap{max-width:760px;margin:0 auto;padding-inline:16px;padding-block:40px 64px;display:flex;flex-direction:column;gap:28px}
+header h1{font-family:var(--display);font-weight:600;font-size:clamp(34px,7vw,54px);line-height:1.15;margin:0;text-wrap:balance}
+header p{color:var(--muted);margin:10px 0 0;font-size:18px}
+.panel{background:var(--card);border:2px solid var(--line);border-radius:22px;padding:22px 22px 24px;display:flex;flex-direction:column;gap:12px}
+.step{font-family:var(--display);color:var(--blue);font-size:15px;letter-spacing:.08em}
+.panel h2{font-family:var(--display);font-weight:600;font-size:clamp(24px,4.6vw,32px);margin:0;line-height:1.2;text-wrap:balance}
+.panel p{margin:0;color:var(--muted);max-width:60ch}
+.panel p b{color:var(--ink)}
+svg{width:100%;height:auto;display:block}
+svg text{font-family:var(--body);fill:var(--ink)}
+.f-blue{fill:var(--blue)} .f-sun{fill:var(--sun)} .f-mint{fill:var(--mint)} .f-rose{fill:var(--rose)} .f-line{fill:var(--line)} .f-bg{fill:var(--bg)} .f-card{fill:var(--card)}
+.s-ink{stroke:var(--ink)} .s-line{stroke:var(--line)} .s-muted{stroke:var(--muted)} .s-rose{stroke:var(--rose)} .s-mint{stroke:var(--mint)} .s-blue{stroke:var(--blue)}
+text.w{fill:#fff} text.m{fill:var(--muted)} text.b{fill:var(--blue)} text.r{fill:var(--rose)} text.g{fill:var(--mint)}
+.more{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-top:6px}
+.mc{background:var(--bg);border-radius:14px;padding:14px 16px;display:flex;flex-direction:column;gap:8px;min-width:0;font-size:15.5px}
+.mc h3{margin:0;font-family:var(--display);font-weight:600;font-size:18px;color:var(--blue)}
+.mc.warn h3{color:var(--rose)}
+.mc p{max-width:none}
+table{border-collapse:collapse;width:100%;font-size:15.5px}
+.tw{overflow-x:auto}
+th,td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-weight:700;color:var(--ink)} td{color:var(--muted)}
+.sum{background:var(--ink);color:var(--bg);border-radius:22px;padding:24px}
+.sum h2{font-family:var(--display);font-weight:600;margin:0 0 10px;font-size:28px}
+.sum ol{margin:0;padding-left:1.3em;display:flex;flex-direction:column;gap:6px}
+</style>
+<style>
+svg text.code{font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace}
+.f-ink{fill:var(--ink)} text.inv{fill:var(--bg)}
+</style>
+
+</head>
+<body>
+<div class="wrap">
+<a class="back" href="index.html">&larr; All lessons</a>
+<header>
+  <h1>Open vs closed:<br>can you take the model home?</h1>
+  <p>One of the first questions an AI company gets when it sells in other countries.</p>
+</header>
+
+<section class="panel">
+  <div class="step">Panel 1 · Three levels of open</div>
+  <h2>From “order off the menu” to “here’s the recipe and where we buy the ingredients”</h2>
+  <svg viewBox="0 0 640 240" role="img" aria-label="Closed API, open weights, fully open source">
+    <g font-size="18">
+      <rect x="10" y="20" width="195" height="170" rx="16" class="f-bg s-line" stroke-width="2"/>
+      <text x="30" y="56">Closed API</text>
+      <text x="30" y="90" font-size="15" class="m">Eat in only</text>
+      <text x="30" y="118" font-size="15" class="m">Use it over the web</text>
+      <text x="30" y="146" font-size="15" class="m">Can’t see the model</text>
+      <rect x="222" y="20" width="195" height="170" rx="16" class="f-blue"/>
+      <text x="242" y="56" class="w">Open weights</text>
+      <text x="242" y="90" font-size="15" class="w">Takeout allowed</text>
+      <text x="242" y="118" font-size="15" class="w">Download the model</text>
+      <text x="242" y="146" font-size="15" class="w">No training data</text>
+      <rect x="434" y="20" width="195" height="170" rx="16" class="f-mint"/>
+      <text x="454" y="56" class="w">Fully open</text>
+      <text x="454" y="90" font-size="15" class="w">Recipe, ingredients</text>
+      <text x="454" y="118" font-size="15" class="w">and method public</text>
+      <text x="454" y="146" font-size="15" class="w">Data and code too</text>
+    </g>
+    <text x="10" y="224" font-size="15" class="m">“Open-source AI” in the news usually means the middle one: open weights</text>
+  </svg>
+  <p><b>Weights</b> are the exact settings of those billions of knobs from lesson one. If you have the weights, you can run the model on your own machine.</p>
+  <div class="more">
+    <div class="mc"><h3>Examples</h3><p>Closed API: OpenAI’s GPT series, Anthropic’s Claude, Google’s flagship Gemini. Open weights: Meta’s Llama, Alibaba’s Qwen, DeepSeek and Mistral have all released models this way.</p></div>
+    <div class="mc"><h3>What’s really going on</h3><p>The same company may do both: its flagship is API-only, while smaller or older versions get open weights. Whether something is “open” depends on the specific model, not the company.</p></div>
+    <div class="mc warn"><h3>Common myth</h3><p><b>“Open weights means you can use it for business however you want.”</b> Every model has its own license. Some limit how many users you can have, some limit what you can use it for. Read the actual license before using it commercially.</p></div>
+  </div>
+</section>
+
+<section class="panel">
+  <div class="step">Panel 2 · Why open weights are useful</div>
+  <h2>Your data stays home, and you can change whatever you want</h2>
+  <svg viewBox="0 0 640 230" role="img" aria-label="Running the model in your own data center">
+    <rect x="10" y="20" width="400" height="170" rx="18" class="f-bg s-ink" stroke-width="3"/>
+    <text x="30" y="52" font-size="18">Your own servers or cloud account</text>
+    <rect x="40" y="72" width="150" height="90" rx="12" class="f-blue"/><text x="88" y="124" font-size="18" class="w">Model</text>
+    <rect x="220" y="72" width="160" height="90" rx="12" class="f-mint"/><text x="234" y="104" font-size="16" class="w">Customer data</text><text x="234" y="128" font-size="13" class="w">contracts, medical</text><text x="234" y="146" font-size="13" class="w">records, payments</text>
+    <path d="M194 117 L216 117" class="s-muted" stroke-width="3"/>
+    <text x="425" y="60" font-size="15">✓ Data skips the vendor</text>
+    <text x="425" y="92" font-size="15">✓ You can fine-tune it</text>
+    <text x="425" y="124" font-size="15">✓ Still works if pulled</text>
+    <text x="425" y="156" font-size="15">✓ Can be cheaper at scale</text>
+    <text x="10" y="220" font-size="15" class="m">Banks, hospitals and governments care most about the first one</text>
+  </svg>
+  <p>The big selling point is <b>control</b>: where the data lives, how the model gets changed, and when to upgrade are all your call. Even if the maker stops offering the model, your copy keeps working.</p>
+</section>
+
+<section class="panel">
+  <div class="step">Panel 3 · The catch</div>
+  <h2>Takeout means you heat it up and do the dishes yourself</h2>
+  <svg viewBox="0 0 640 200" role="img" aria-label="The costs of running it yourself">
+    <g font-size="17">
+      <rect x="10" y="20" width="305" height="70" rx="14" class="f-bg"/><text x="28" y="62">Buy or rent GPUs, run them</text>
+      <rect x="325" y="20" width="305" height="70" rx="14" class="f-bg"/><text x="343" y="62">Need deployment engineers</text>
+      <rect x="10" y="100" width="305" height="70" rx="14" class="f-bg"/><text x="28" y="142">Security patches are on you</text>
+      <rect x="325" y="100" width="305" height="70" rx="14" class="f-bg"/><text x="343" y="142">Top versions often stay closed</text>
+    </g>
+  </svg>
+  <p>At low volume, calling an API is usually cheaper and easier. Running it yourself pays off when volume is high and the data is sensitive.</p>
+</section>
+
+<section class="panel">
+  <div class="step">Panel 4 · How to choose</div>
+  <h2>Pick based on the situation, not on team loyalty</h2>
+  <div class="tw"><table>
+    <tr><th>Situation</th><th>More likely pick</th></tr>
+    <tr><td>Wants a quick trial, no AI engineering team</td><td>Closed API</td></tr>
+    <tr><td>Needs the strongest ability for complex reasoning or agents</td><td>Closed flagship (usually still a step ahead)</td></tr>
+    <tr><td>Data absolutely can’t leave the company / the country</td><td>Open weights, run on your own servers</td></tr>
+    <tr><td>Huge volume of one simple task (like sorting or pulling out info)</td><td>Small open-weights model + fine-tuning</td></tr>
+    <tr><td>Wants the best of both</td><td>Mix: sensitive tasks run locally, hard problems go to an API</td></tr>
+  </table></div>
+  <p>“A step ahead” changes fast. Check the latest test results before deciding, not your gut feeling.</p>
+</section>
+
+<section class="panel">
+  <div class="step">Panel 5 · Selling abroad</div>
+  <h2>When AI companies sell in other countries: three questions customers ask</h2>
+  <svg viewBox="0 0 640 230" role="img" aria-label="Three questions customers in other countries ask about a foreign AI model">
+    <g font-size="16">
+      <rect x="10" y="10" width="620" height="60" rx="12" class="f-bg"/>
+      <text x="26" y="47"><tspan class="b" font-weight="700">Where does my data go?</tspan><tspan dx="12">Does the API send it to another country?</tspan></text>
+      <rect x="10" y="80" width="620" height="60" rx="12" class="f-bg"/>
+      <text x="26" y="117"><tspan class="b" font-weight="700">Is it compliant?</tspan><tspan dx="12">Does it meet local privacy laws and industry rules?</tspan></text>
+      <rect x="10" y="150" width="620" height="60" rx="12" class="f-bg"/>
+      <text x="26" y="187"><tspan class="b" font-weight="700">Can I run it myself?</tspan><tspan dx="12">Open weights can run on a cloud in my country</tspan></text>
+    </g>
+  </svg>
+  <p>Open weights give a ready-made answer: <b>the model sits on your own servers, and your data never passes through us</b>. That’s one reason many model makers selling abroad, including a lot of Chinese ones, go the open-weights route.</p>
+  <div class="more">
+    <div class="mc"><h3>Think of it like</h3><p>When you sell software, “install it on your own servers” (on-premises) gets through a customer’s security review more easily than “use our cloud.”</p></div>
+    <div class="mc"><h3>What’s really going on</h3><p>Even when it runs on their own servers, the customer’s security team may still check where the model came from, what it was trained on, and what built-in tendencies it has. You need real answers ready, not just the word “open.”</p></div>
+    <div class="mc warn"><h3>Heads up</h3><p>Rules in each country and companies’ buying policies change fast. For any specific customer, check the rules at the time. This page only covers the general idea.</p></div>
+  </div>
+</section>
+
+<section class="sum">
+  <h2>Remember this</h2>
+  <ol>
+    <li>Closed API = eat in; open weights = takeout; fully open = they hand you the recipe too</li>
+    <li>“Open-source AI” usually means open weights, and business use depends on the license</li>
+    <li>Open weights buy you control; the price is running it yourself</li>
+    <li>Choose based on how sensitive the data is, how much you’ll use it, and what your team can handle</li>
+    <li>When selling abroad, open weights are a strong answer to “where does my data go?”</li>
+  </ol>
+</section>
+</div>
+
+</body>
+</html>

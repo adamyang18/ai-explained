@@ -1,0 +1,181 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>html{color-scheme:light}body{margin:0}img{max-width:100%}[hidden]{display:none!important}.back{font-family:var(--body);font-weight:700;color:var(--blue);text-decoration:none;font-size:15px;align-self:flex-start}.back:hover,.back:focus-visible{text-decoration:underline}</style>
+<title>Reasoning Models</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600&family=Nunito:wght@400;700&display=swap">
+<style>
+/* Layout: picture-book strip; each panel = big drawing + one line + 3 detail cards */
+:root{
+  --bg:#EEF3F6; --card:#FFFFFF; --ink:#1B2A38; --muted:#5B6B7A;
+  --blue:#2E64E8; --sun:#F4A51C; --mint:#2FA67F; --rose:#E0566B; --line:#D3DDE6;
+  --display:"Fredoka","Avenir Next",system-ui,sans-serif;
+  --body:"Nunito","Avenir Next",system-ui,sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#111922; --card:#1A2531; --ink:#E6EEF5; --muted:#9AAABA;
+  --blue:#6F97FF; --sun:#F7B947; --mint:#4CC79C; --rose:#F07A8B; --line:#2C3A48; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#111922; --card:#1A2531; --ink:#E6EEF5; --muted:#9AAABA;
+  --blue:#6F97FF; --sun:#F7B947; --mint:#4CC79C; --rose:#F07A8B; --line:#2C3A48; color-scheme:dark}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:17px;line-height:1.6}
+.wrap{max-width:760px;margin:0 auto;padding-inline:16px;padding-block:40px 64px;display:flex;flex-direction:column;gap:28px}
+header h1{font-family:var(--display);font-weight:600;font-size:clamp(34px,7vw,54px);line-height:1.15;margin:0;text-wrap:balance}
+header p{color:var(--muted);margin:10px 0 0;font-size:18px}
+.panel{background:var(--card);border:2px solid var(--line);border-radius:22px;padding:22px 22px 24px;display:flex;flex-direction:column;gap:12px}
+.step{font-family:var(--display);color:var(--blue);font-size:15px;letter-spacing:.08em}
+.panel h2{font-family:var(--display);font-weight:600;font-size:clamp(24px,4.6vw,32px);margin:0;line-height:1.2;text-wrap:balance}
+.panel p{margin:0;color:var(--muted);max-width:60ch}
+.panel p b{color:var(--ink)}
+svg{width:100%;height:auto;display:block}
+svg text{font-family:var(--body);fill:var(--ink)}
+.f-blue{fill:var(--blue)} .f-sun{fill:var(--sun)} .f-mint{fill:var(--mint)} .f-rose{fill:var(--rose)} .f-line{fill:var(--line)} .f-bg{fill:var(--bg)} .f-card{fill:var(--card)}
+.s-ink{stroke:var(--ink)} .s-line{stroke:var(--line)} .s-muted{stroke:var(--muted)} .s-rose{stroke:var(--rose)} .s-mint{stroke:var(--mint)} .s-blue{stroke:var(--blue)}
+text.w{fill:#fff} text.m{fill:var(--muted)} text.b{fill:var(--blue)} text.r{fill:var(--rose)} text.g{fill:var(--mint)}
+.more{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-top:6px}
+.mc{background:var(--bg);border-radius:14px;padding:14px 16px;display:flex;flex-direction:column;gap:8px;min-width:0;font-size:15.5px}
+.mc h3{margin:0;font-family:var(--display);font-weight:600;font-size:18px;color:var(--blue)}
+.mc.warn h3{color:var(--rose)}
+.mc p{max-width:none}
+table{border-collapse:collapse;width:100%;font-size:15.5px}
+.tw{overflow-x:auto}
+th,td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-weight:700;color:var(--ink)} td{color:var(--muted)}
+.sum{background:var(--ink);color:var(--bg);border-radius:22px;padding:24px}
+.sum h2{font-family:var(--display);font-weight:600;margin:0 0 10px;font-size:28px}
+.sum ol{margin:0;padding-left:1.3em;display:flex;flex-direction:column;gap:6px}
+</style>
+
+</head>
+<body>
+<div class="wrap">
+<a class="back" href="index.html">&larr; All lessons</a>
+<header>
+  <h1>Reasoning Models:<br>Scratch Work First, Then the Answer</h1>
+  <p>Spend more time "thinking" to get more answers right.</p>
+</header>
+
+<section class="panel">
+  <div class="step">Panel 1 · What's the difference</div>
+  <h2>A regular model blurts out an answer. A reasoning model works it out first.</h2>
+  <svg viewBox="0 0 640 250" role="img" aria-label="A regular model answers straight away; a reasoning model writes scratch work first">
+    <rect x="10" y="10" width="620" height="62" rx="12" class="f-bg"/>
+    <text x="26" y="36" font-size="17">Q: A shirt's price goes up 20%, then it's marked 20% off.</text>
+    <text x="26" y="60" font-size="17">Is it now cheaper or pricier than the original?</text>
+    <rect x="10" y="88" width="290" height="120" rx="16" class="f-bg s-line" stroke-width="2"/>
+    <text x="28" y="120" font-size="18">Regular model</text>
+    <text x="28" y="156" font-size="17" class="r">"Same: +20% −20% = 0"</text>
+    <text x="28" y="186" font-size="15" class="m">Goes with its gut, falls for it</text>
+    <rect x="320" y="88" width="310" height="120" rx="16" class="f-blue"/>
+    <text x="338" y="120" font-size="18" class="w">Reasoning model</text>
+    <text x="338" y="148" font-size="15" class="w">Scratch: 100 → 120 → 120×0.8 = 96</text>
+    <text x="338" y="178" font-size="17" class="w">"4% cheaper"</text>
+    <text x="10" y="240" font-size="15" class="m">Illustrative: today's regular models usually get this one right too</text>
+  </svg>
+  <p>Before answering, a reasoning model writes <b>scratch work just for itself</b>: it breaks the problem into steps, double-checks, and fixes mistakes it spots.</p>
+</section>
+
+<section class="panel">
+  <div class="step">Panel 2 · What's really going on</div>
+  <h2>"Thinking" is still next-word prediction, with scratch work written first</h2>
+  <svg viewBox="0 0 640 180" role="img" aria-label="Thinking tokens plus answer tokens">
+    <g font-size="16">
+      <rect x="10" y="30" width="410" height="56" rx="12" class="f-bg s-muted" stroke-width="2" stroke-dasharray="6 5"/>
+      <text x="26" y="64" class="m">Thinking: 100→120… wait, recheck… so 96</text>
+      <rect x="430" y="30" width="200" height="56" rx="12" class="f-blue"/>
+      <text x="446" y="64" class="w">Answer: 4% cheaper</text>
+    </g>
+    <text x="10" y="118" font-size="16">Scratch work can run from hundreds to tens of thousands of tokens,</text>
+    <text x="10" y="140" font-size="16">and is often hidden from the user or shown only as a summary</text>
+    <text x="10" y="168" font-size="16" class="m">Scratch work counts as tokens too, so it costs time and money</text>
+  </svg>
+  <p>Same as lesson one: it still writes one token at a time. It just <b>writes the scratch work first, then the answer</b>.</p>
+  <div class="more">
+    <div class="mc"><h3>Think of it like</h3><p>On a math test, you have to show your work on scrap paper. You're the same person. You just aren't allowed to do it in your head and jump to the answer, so you make fewer mistakes.</p></div>
+    <div class="mc"><h3>How it actually works</h3><p>Early on, people found that adding "think step by step" to a prompt made answers more accurate. That's called "chain of thought." A reasoning model has that habit trained right into it.</p></div>
+    <div class="mc warn"><h3>Common myth</h3><p><b>"The scratch work is exactly what's going on inside the model."</b> The scratch work helps it get better answers, but it doesn't necessarily give a complete or honest picture of how the model really reached its answer.</p></div>
+  </div>
+</section>
+
+<section class="panel">
+  <div class="step">Panel 3 · How it's trained</div>
+  <h2>Practice on problems with right answers, get rewarded for getting them right</h2>
+  <svg viewBox="0 0 640 235" role="img" aria-label="Reinforcement learning: get a problem, think, check the answer, get a reward">
+    <g font-size="17">
+      <rect x="10" y="30" width="140" height="80" rx="14" class="f-blue"/><text x="28" y="66" class="w">Problems</text><text x="28" y="92" font-size="14" class="w">math, coding</text>
+      <rect x="175" y="30" width="140" height="80" rx="14" class="f-sun"/><text x="193" y="66" class="w">Thinks</text><text x="189" y="92" font-size="13" class="w">long scratch work</text>
+      <rect x="340" y="30" width="140" height="80" rx="14" class="f-mint"/><text x="358" y="66" class="w">Auto-graded</text><text x="358" y="92" font-size="14" class="w">key or run tests</text>
+      <rect x="505" y="30" width="125" height="80" rx="14" class="f-rose"/><text x="521" y="66" class="w">Right → +</text><text x="521" y="92" font-size="14" class="w">Wrong → −</text>
+    </g>
+    <path d="M152 70 L172 70" class="s-muted" stroke-width="3"/><path d="M317 70 L337 70" class="s-muted" stroke-width="3"/><path d="M482 70 L502 70" class="s-muted" stroke-width="3"/>
+    <text x="10" y="146" font-size="17">After lots of rounds, the model teaches itself to break problems</text>
+    <text x="10" y="170" font-size="17">down, double-check, and back up when it's on the wrong path</text>
+    <text x="10" y="200" font-size="15" class="m">This is called reinforcement learning. Nobody shows it how to think,</text>
+    <text x="10" y="222" font-size="15" class="m">it's only told whether its answer was right</text>
+  </svg>
+  <p>That's why reasoning models have improved the most in areas where answers can be checked as right or wrong, like <b>math, coding and logic</b>.</p>
+</section>
+
+<section class="panel">
+  <div class="step">Panel 4 · Trading time for accuracy</div>
+  <h2>Thinking longer gets better answers, but it's worth less and less</h2>
+  <svg viewBox="0 0 640 240" role="img" aria-label="More thinking raises accuracy, but with diminishing returns">
+    <line x1="60" y1="190" x2="620" y2="190" class="s-line" stroke-width="2"/>
+    <line x1="60" y1="20" x2="60" y2="190" class="s-line" stroke-width="2"/>
+    <path d="M60 170 C140 90 240 62 360 50 S560 40 610 38" fill="none" class="s-blue" stroke-width="4"/>
+    <text x="70" y="214" font-size="15" class="m">No thinking</text><text x="300" y="214" font-size="15" class="m">A bit more</text><text x="530" y="214" font-size="15" class="m">A lot</text>
+    <text x="68" y="28" font-size="15" class="m">Accuracy</text>
+    <text x="120" y="96" font-size="15" class="g">Biggest gains here</text>
+    <text x="430" y="26" font-size="15" class="m">Costs more, gains less</text>
+    <text x="10" y="236" font-size="14" class="m">Illustrative curve</text>
+  </svg>
+  <p>When an app lets you <b>pick a thinking level</b> (low / medium / high), you're choosing where to sit on this curve.</p>
+  <div class="more">
+    <div class="mc"><h3>Think of it like</h3><p>In chess you can spend 10 seconds or 10 minutes on a move. Thinking longer really does help, but going from 5 minutes to 10 doesn't add much.</p></div>
+    <div class="mc"><h3>How it actually works</h3><p>The industry calls this "test-time compute." Models used to get stronger mainly by using more computing power during training. Now there's a second path: use more computing power while answering.</p></div>
+    <div class="mc warn"><h3>Common myth</h3><p><b>"Always turn thinking all the way up."</b> Thinking longer on an easy question doesn't help. Sometimes it "overthinks" and changes a right answer to a wrong one, and it's slower and more expensive too.</p></div>
+  </div>
+</section>
+
+<section class="panel">
+  <div class="step">Panel 5 · When to use it</div>
+  <h2>Turn thinking on for hard problems, off for easy ones</h2>
+  <div class="tw"><table>
+    <tr><th>Good for thinking mode</th><th>No need for thinking mode</th></tr>
+    <tr><td>Multi-step math, financial calculations</td><td>Translating, rewriting, polishing</td></tr>
+    <tr><td>Writing and debugging complex code</td><td>Simple Q&amp;A, summarizing what you looked up</td></tr>
+    <tr><td>Planning and scheduling with lots of conditions</td><td>Common customer-service questions</td></tr>
+    <tr><td>Breaking down complex agent tasks</td><td>Live chats that need instant replies</td></tr>
+  </table></div>
+  <p>A common approach at companies: <b>start in regular mode, and only step up for hard problems</b>. It saves money without hurting results.</p>
+</section>
+
+<section class="panel">
+  <div class="step">Background</div>
+  <h2>A new wave that started in 2024</h2>
+  <svg viewBox="0 0 640 150" role="img" aria-label="Timeline of reasoning models">
+    <line x1="30" y1="70" x2="610" y2="70" class="s-ink" stroke-width="3"/>
+    <circle cx="120" cy="70" r="10" class="f-blue"/><text x="120" y="44" font-size="16" text-anchor="middle">Sept 2024</text><text x="120" y="104" font-size="15" class="m" text-anchor="middle">OpenAI o1 released</text>
+    <circle cx="320" cy="70" r="10" class="f-sun"/><text x="320" y="44" font-size="16" text-anchor="middle">Jan 2025</text><text x="320" y="104" font-size="15" class="m" text-anchor="middle">DeepSeek-R1 open weights</text>
+    <circle cx="520" cy="70" r="10" class="f-mint"/><text x="520" y="44" font-size="16" text-anchor="middle">After that</text><text x="520" y="104" font-size="15" class="m" text-anchor="middle">Most major models</text><text x="520" y="124" font-size="15" class="m" text-anchor="middle">add a thinking mode</text>
+  </svg>
+  <p>DeepSeek-R1 mattered because it made its weights and methods public, so "reasoning" was no longer something only a few closed-model companies had.</p>
+</section>
+
+<section class="sum">
+  <h2>Remember it in one line each</h2>
+  <ol>
+    <li><b>Reasoning model</b> = writes scratch work for itself before it answers</li>
+    <li>Trained with reinforcement learning: practice on problems with right answers, get points for getting them right</li>
+    <li>More thinking = more accurate, but slower and pricier, with shrinking returns</li>
+    <li>Turn thinking on for hard problems, off for easy ones</li>
+  </ol>
+</section>
+</div>
+
+</body>
+</html>

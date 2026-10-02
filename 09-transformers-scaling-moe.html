@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>html{color-scheme:light}body{margin:0}img{max-width:100%}[hidden]{display:none!important}.back{font-family:var(--body);font-weight:700;color:var(--blue);text-decoration:none;font-size:15px;align-self:flex-start}.back:hover,.back:focus-visible{text-decoration:underline}</style>
+<title>Transformers, Scaling and MoE</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600&family=Nunito:wght@400;700&display=swap">
+<style>
+/* Layout: picture-book strip; each panel = big drawing + one line + 3 detail cards */
+:root{
+  --bg:#EEF3F6; --card:#FFFFFF; --ink:#1B2A38; --muted:#5B6B7A;
+  --blue:#2E64E8; --sun:#F4A51C; --mint:#2FA67F; --rose:#E0566B; --line:#D3DDE6;
+  --display:"Fredoka","Avenir Next",system-ui,sans-serif;
+  --body:"Nunito","Avenir Next",system-ui,sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#111922; --card:#1A2531; --ink:#E6EEF5; --muted:#9AAABA;
+  --blue:#6F97FF; --sun:#F7B947; --mint:#4CC79C; --rose:#F07A8B; --line:#2C3A48; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#111922; --card:#1A2531; --ink:#E6EEF5; --muted:#9AAABA;
+  --blue:#6F97FF; --sun:#F7B947; --mint:#4CC79C; --rose:#F07A8B; --line:#2C3A48; color-scheme:dark}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:17px;line-height:1.6}
+.wrap{max-width:760px;margin:0 auto;padding-inline:16px;padding-block:40px 64px;display:flex;flex-direction:column;gap:28px}
+header h1{font-family:var(--display);font-weight:600;font-size:clamp(34px,7vw,54px);line-height:1.15;margin:0;text-wrap:balance}
+header p{color:var(--muted);margin:10px 0 0;font-size:18px}
+.panel{background:var(--card);border:2px solid var(--line);border-radius:22px;padding:22px 22px 24px;display:flex;flex-direction:column;gap:12px}
+.step{font-family:var(--display);color:var(--blue);font-size:15px;letter-spacing:.08em}
+.panel h2{font-family:var(--display);font-weight:600;font-size:clamp(24px,4.6vw,32px);margin:0;line-height:1.2;text-wrap:balance}
+.panel p{margin:0;color:var(--muted);max-width:60ch}
+.panel p b{color:var(--ink)}
+svg{width:100%;height:auto;display:block}
+svg text{font-family:var(--body);fill:var(--ink)}
+.f-blue{fill:var(--blue)} .f-sun{fill:var(--sun)} .f-mint{fill:var(--mint)} .f-rose{fill:var(--rose)} .f-line{fill:var(--line)} .f-bg{fill:var(--bg)} .f-card{fill:var(--card)}
+.s-ink{stroke:var(--ink)} .s-line{stroke:var(--line)} .s-muted{stroke:var(--muted)} .s-rose{stroke:var(--rose)} .s-mint{stroke:var(--mint)} .s-blue{stroke:var(--blue)}
+text.w{fill:#fff} text.m{fill:var(--muted)} text.b{fill:var(--blue)} text.r{fill:var(--rose)} text.g{fill:var(--mint)}
+.more{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-top:6px}
+.mc{background:var(--bg);border-radius:14px;padding:14px 16px;display:flex;flex-direction:column;gap:8px;min-width:0;font-size:15.5px}
+.mc h3{margin:0;font-family:var(--display);font-weight:600;font-size:18px;color:var(--blue)}
+.mc.warn h3{color:var(--rose)}
+.mc p{max-width:none}
+table{border-collapse:collapse;width:100%;font-size:15.5px}
+.tw{overflow-x:auto}
+th,td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-weight:700;color:var(--ink)} td{color:var(--muted)}
+.sum{background:var(--ink);color:var(--bg);border-radius:22px;padding:24px}
+.sum h2{font-family:var(--display);font-weight:600;margin:0 0 10px;font-size:28px}
+.sum ol{margin:0;padding-left:1.3em;display:flex;flex-direction:column;gap:6px}
+</style>
+<style>
+svg text.code{font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace}
+.f-ink{fill:var(--ink)} text.inv{fill:var(--bg)}
+</style>
+
+</head>
+<body>
+<div class="wrap">
+<a class="back" href="index.html">&larr; All lessons</a>
+<header>
+  <h1>Under the hood:<br>Transformers, scaling laws and MoE</h1>
+  <p>The three words that show up most in AI launch events and tech news.</p>
+</header>
+
+<section class="panel">
+  <div class="step">Panel 1 · Transformer</div>
+  <h2>The skeleton of almost every big AI model</h2>
+  <svg viewBox="0 0 640 170" role="img" aria-label="The T in GPT stands for Transformer">
+    <g font-size="44">
+      <rect x="20" y="20" width="90" height="90" rx="16" class="f-bg s-line" stroke-width="2"/><text x="65" y="82" text-anchor="middle">G</text>
+      <rect x="120" y="20" width="90" height="90" rx="16" class="f-bg s-line" stroke-width="2"/><text x="165" y="82" text-anchor="middle">P</text>
+      <rect x="220" y="20" width="90" height="90" rx="16" class="f-blue"/><text x="265" y="82" text-anchor="middle" class="w">T</text>
+    </g>
+    <text x="340" y="50" font-size="17">Generative: it creates</text>
+    <text x="340" y="80" font-size="17">Pre-trained: learned first</text>
+    <text x="340" y="110" font-size="17" class="b">Transformer: a model design</text>
+    <text x="20" y="156" font-size="15" class="m">From a Google team's 2017 paper, “Attention Is All You Need”</text>
+  </svg>
+  <p>At its core is a trick called <b>attention</b>.</p>
+</section>
+
+<section class="panel">
+  <div class="step">Panel 2 · Attention</div>
+  <h2>Every word looks back and asks: who should I pay attention to?</h2>
+  <svg viewBox="0 0 640 220" role="img" aria-label="The word “it” focuses its attention on “cat”">
+    <g font-size="21" text-anchor="middle">
+      <text x="37" y="150">The</text><text x="82" y="150">cat</text><text x="144" y="150">didn't</text><text x="206" y="150">eat</text><text x="251" y="150">the</text><text x="302" y="150">fish</text><text x="375" y="150">because</text><text x="436" y="150" class="b">it</text><text x="475" y="150">was</text><text x="520" y="150">too</text><text x="576" y="150">full.</text>
+    </g>
+    <path d="M436 122 C390 20 128 20 82 122" fill="none" class="s-blue" stroke-width="6"/>
+    <path d="M436 122 C410 62 328 62 302 122" fill="none" class="s-line" stroke-width="2"/>
+    <text x="196" y="36" font-size="16" class="b">High attention</text>
+    <text x="180" y="98" font-size="14" class="m">Low attention</text>
+    <text x="20" y="200" font-size="16" class="m">Change “full” to “smelly” and “it” points to the fish instead</text>
+  </svg>
+  <p>When the model reaches “it”, it gives every earlier word a score to decide <b>who “it” is</b>. Every word does this across the whole sentence, and that's how the meaning clicks together.</p>
+  <div class="more">
+    <div class="mc"><h3>Think of it like</h3><p>A team meeting where, before anyone speaks, they glance around the room, figure out which earlier comments matter most to what they're about to say, and focus on those.</p></div>
+    <div class="mc"><h3>Why it won</h3><p>Older models read one word at a time, in order. That couldn't run in parallel, so training was slow. A Transformer lets all the words “look at” each other at the same time. That makes full use of GPUs working in parallel, which is what made training on massive amounts of data possible.</p></div>
+    <div class="mc warn"><h3>Link to the context window</h3><p>Every word has to look at every other word. So if the text gets twice as long, this part of the work goes up about four times. That's one reason context windows can't be endless, and why long text costs more.</p></div>
+  </div>
+</section>
+
+<section class="panel">
+  <div class="step">Panel 3 · Scaling laws</div>
+  <h2>Throw in more resources, get predictably stronger</h2>
+  <svg viewBox="0 0 640 240" role="img" aria-label="As compute increases, the error rate falls along a predictable curve">
+    <line x1="60" y1="190" x2="620" y2="190" class="s-line" stroke-width="2"/>
+    <line x1="60" y1="20" x2="60" y2="190" class="s-line" stroke-width="2"/>
+    <line x1="80" y1="40" x2="600" y2="170" class="s-blue" stroke-width="4"/>
+    <g><circle cx="120" cy="50" r="7" class="f-blue"/><circle cx="220" cy="75" r="7" class="f-blue"/><circle cx="320" cy="100" r="7" class="f-blue"/><circle cx="420" cy="125" r="7" class="f-blue"/><circle cx="520" cy="150" r="9" class="f-sun"/></g>
+    <text x="10" y="14" font-size="14" class="m">Error rate</text>
+    <text x="420" y="214" font-size="14" class="m">Parameters + data + compute →</text>
+    <text x="455" y="88" font-size="15" class="b">The next point can be</text>
+    <text x="455" y="108" font-size="15" class="b">worked out in advance</text>
+    <text x="10" y="234" font-size="14" class="m">Illustrative (real charts use a log scale)</text>
+  </svg>
+  <p>Research from around 2020 found that bigger models, more data and more computing power make the error rate fall <b>along a predictable curve</b>.</p>
+  <div class="more">
+    <div class="mc"><h3>Think of it like</h3><p>A farmer's fertilizer curve: putting in more raises the harvest, and you can roughly predict by how much. That's why big companies dare to spend huge sums training bigger models.</p></div>
+    <div class="mc"><h3>What's really going on</h3><p>OpenAI's 2020 research first described this pattern. DeepMind's Chinchilla study in 2022 added that parameters and data have to grow <b>together</b>. Making the model bigger without enough data is a waste.</p></div>
+    <div class="mc warn"><h3>The current debate</h3><p>High-quality text is running out. People in the industry argue about whether just going “bigger” is paying off less and less. Reasoning models that “think longer before answering” are another path to keep getting stronger.</p></div>
+  </div>
+</section>
+
+<section class="panel">
+  <div class="step">Panel 4 · MoE: Mixture of Experts</div>
+  <h2>Hire a hundred experts, wake up only a few each time</h2>
+  <svg viewBox="0 0 640 230" role="img" aria-label="A router sends each token to just a few experts">
+    <rect x="10" y="80" width="100" height="60" rx="14" class="f-ink"/><text x="60" y="116" font-size="16" text-anchor="middle" class="inv">One token</text>
+    <rect x="140" y="80" width="90" height="60" rx="30" class="f-sun"/><text x="185" y="116" font-size="16" text-anchor="middle" class="w">Router</text>
+    <path d="M114 110 L136 110" class="s-muted" stroke-width="3"/>
+    <g id="experts"></g>
+    <path d="M234 100 L360 54" class="s-blue" stroke-width="3"/><path d="M234 115 L492 102" class="s-blue" stroke-width="3"/>
+    <text x="20" y="222" font-size="15" class="m">Each token wakes only a few experts (blue). The rest stay asleep.</text>
+  </svg>
+  <p>MoE = Mixture of Experts. <b>The total number of parameters is huge, but only a small slice is used each time</b>, so it's smart and still saves computing power.</p>
+  <div class="more">
+    <div class="mc"><h3>Think of it like</h3><p>A big hospital with hundreds of specialist doctors. Each patient only needs to see two or three of them. The hospital knows a lot overall, but treating one patient doesn't cost much.</p></div>
+    <div class="mc"><h3>Reading launch numbers</h3><p>DeepSeek-V3 announced “671 billion total parameters, 37 billion activated per token.” The first number is about how much it knows. The second is about how fast and how expensive each step is. Mixtral, from Mistral, is another well-known MoE model.</p></div>
+    <div class="mc warn"><h3>Common myth</h3><p><b>“MoE is efficient, so it's cheap to run.”</b> It only computes a slice each time, but every expert still has to fit in the graphics card's memory. So the hardware needed to run it is still serious.</p></div>
+  </div>
+</section>
+
+<section class="panel">
+  <div class="step">Panel 5 · Putting it together</div>
+  <h2>Where the three words fit</h2>
+  <div class="tw"><table>
+    <tr><th>Word</th><th>Question it answers</th><th>Where you'll hear it</th></tr>
+    <tr><td><b>Transformer / attention</b></td><td>What does the model look like inside?</td><td>Tech explainers; why long context is expensive</td></tr>
+    <tr><td><b>Scaling laws</b></td><td>Why is everyone spending so much to go bigger?</td><td>Funding news, spending on computing power, the “has AI hit a wall?” debate</td></tr>
+    <tr><td><b>MoE</b></td><td>How do you go big without it costing a fortune?</td><td>New model launches: “X total parameters, Y activated”</td></tr>
+  </table></div>
+  <p>You don't need these words to use AI, but they help you <b>follow what engineers and tech news are talking about</b>.</p>
+</section>
+
+<section class="sum">
+  <h2>The short version</h2>
+  <ol>
+    <li><b>Transformer</b>: the skeleton of big AI models, the T in GPT</li>
+    <li><b>Attention</b>: every word looks back over the sentence and decides what to focus on</li>
+    <li><b>Scaling laws</b>: more parameters, data and compute → predictably stronger</li>
+    <li><b>MoE</b>: lots of experts, only a few woken up each time; huge total parameters, small active parameters</li>
+  </ol>
+</section>
+</div>
+<script>
+(function(){var g=document.getElementById('experts'),ns='http://www.w3.org/2000/svg',on=[2,13];
+for(var r=0;r<3;r++)for(var i=0;i<8;i++){var k=r*8+i,e=document.createElementNS(ns,'circle');e.setAttribute('cx',290+i*44);e.setAttribute('cy',50+r*50);e.setAttribute('r',16);e.setAttribute('class',on.indexOf(k)>-1?'f-blue':'f-line');g.appendChild(e);}})();
+</script>
+
+</body>
+</html>

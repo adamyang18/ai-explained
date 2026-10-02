@@ -1,0 +1,182 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>html{color-scheme:light}body{margin:0}img{max-width:100%}[hidden]{display:none!important}.back{font-family:var(--body);font-weight:700;color:var(--blue);text-decoration:none;font-size:15px;align-self:flex-start}.back:hover,.back:focus-visible{text-decoration:underline}</style>
+<title>What Is Pretraining</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600&family=Nunito:wght@400;700&display=swap">
+<style>
+/* Layout: picture-book strip; each panel = one big drawing + one line */
+:root{
+  --bg:#EEF3F6; --card:#FFFFFF; --ink:#1B2A38; --muted:#5B6B7A;
+  --blue:#2E64E8; --sun:#F4A51C; --mint:#2FA67F; --rose:#E0566B; --line:#D3DDE6;
+  --display:"Fredoka","Avenir Next",system-ui,sans-serif;
+  --body:"Nunito","Avenir Next",system-ui,sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#111922; --card:#1A2531; --ink:#E6EEF5; --muted:#9AAABA;
+  --blue:#6F97FF; --sun:#F7B947; --mint:#4CC79C; --rose:#F07A8B; --line:#2C3A48; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#111922; --card:#1A2531; --ink:#E6EEF5; --muted:#9AAABA;
+  --blue:#6F97FF; --sun:#F7B947; --mint:#4CC79C; --rose:#F07A8B; --line:#2C3A48; color-scheme:dark}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:17px;line-height:1.6}
+.wrap{max-width:760px;margin:0 auto;padding-inline:16px;padding-block:40px 64px;display:flex;flex-direction:column;gap:28px}
+header h1{font-family:var(--display);font-weight:600;font-size:clamp(34px,7vw,54px);line-height:1.15;margin:0;text-wrap:balance}
+header p{color:var(--muted);margin:10px 0 0;font-size:18px}
+.panel{background:var(--card);border:2px solid var(--line);border-radius:22px;padding:22px 22px 24px;display:flex;flex-direction:column;gap:12px}
+.step{font-family:var(--display);color:var(--blue);font-size:15px;letter-spacing:.08em}
+.panel h2{font-family:var(--display);font-weight:600;font-size:clamp(24px,4.6vw,32px);margin:0;line-height:1.2;text-wrap:balance}
+.panel p{margin:0;color:var(--muted);max-width:60ch}
+.panel p b{color:var(--ink)}
+svg{width:100%;height:auto;display:block}
+svg text{font-family:var(--body);fill:var(--ink)}
+.f-ink{fill:var(--ink)} .f-blue{fill:var(--blue)} .f-sun{fill:var(--sun)} .f-mint{fill:var(--mint)} .f-rose{fill:var(--rose)} .f-line{fill:var(--line)} .f-bg{fill:var(--bg)} .f-card{fill:var(--card)}
+.s-ink{stroke:var(--ink)} .s-line{stroke:var(--line)} .s-muted{stroke:var(--muted)} .s-rose{stroke:var(--rose)}
+text.w{fill:#fff} text.m{fill:var(--muted)} text.b{fill:var(--blue)} text.r{fill:var(--rose)}
+.sum{background:var(--ink);color:var(--bg);border-radius:22px;padding:24px}
+.sum h2{font-family:var(--display);font-weight:600;margin:0 0 10px;font-size:28px}
+.sum p{margin:0;font-size:19px}
+@media (prefers-reduced-motion:no-preference){.spin{transform-origin:320px 105px;animation:sp 8s linear infinite}@keyframes sp{to{transform:rotate(360deg)}}}
+</style>
+
+</head>
+<body>
+<div class="wrap">
+<a class="back" href="index.html">&larr; All lessons</a>
+<header>
+  <h1>Pretraining:<br>an AI's “school years”</h1>
+  <p>The first step in making an AI assistant, and the most expensive one.</p>
+</header>
+
+<section class="panel">
+  <div class="step">IN ONE LINE</div>
+  <h2>Take a blank brain and have it read a massive amount of human writing</h2>
+  <svg viewBox="0 0 640 200" role="img" aria-label="A blank brain reads books and becomes a full brain">
+    <circle cx="110" cy="95" r="70" class="f-bg s-line" stroke-width="3" stroke-dasharray="8 8"/>
+    <text x="110" y="102" font-size="22" class="m" text-anchor="middle">Blank</text>
+    <text x="110" y="190" font-size="16" class="m" text-anchor="middle">All knobs set at random</text>
+    <g><rect x="250" y="120" width="130" height="22" rx="4" class="f-blue"/><rect x="258" y="96" width="115" height="22" rx="4" class="f-sun"/><rect x="246" y="72" width="128" height="22" rx="4" class="f-mint"/><rect x="262" y="48" width="104" height="22" rx="4" class="f-rose"/></g>
+    <path d="M190 95 L235 95 M225 85 L237 95 L225 105" class="s-muted" stroke-width="3" fill="none"/>
+    <path d="M395 95 L440 95 M430 85 L442 95 L430 105" class="s-muted" stroke-width="3" fill="none"/>
+    <circle cx="530" cy="95" r="70" class="f-blue"/>
+    <text x="530" y="90" font-size="18" class="w" text-anchor="middle">Continues text</text>
+    <text x="530" y="116" font-size="18" class="w" text-anchor="middle">Knows a lot</text>
+    <text x="530" y="190" font-size="16" class="m" text-anchor="middle">Base model</text>
+  </svg>
+  <p>The “pre” means <b>laying the foundation first</b>. After this come fine-tuning and human feedback, and only then does it become the chat assistant you use.</p>
+</section>
+
+<section class="panel">
+  <div class="step">STEP 1 · STOCKING UP</div>
+  <h2>Collect text, then filter out the junk</h2>
+  <svg viewBox="0 0 640 230" role="img" aria-label="Text from many sources goes through a filter">
+    <g font-size="17">
+      <rect x="10" y="20" width="110" height="40" rx="10" class="f-blue"/><text x="26" y="46" class="w">Websites</text>
+      <rect x="130" y="20" width="110" height="40" rx="10" class="f-sun"/><text x="160" y="46" class="w">Books</text>
+      <rect x="250" y="20" width="110" height="40" rx="10" class="f-mint"/><text x="282" y="46" class="w">Code</text>
+      <rect x="370" y="20" width="110" height="40" rx="10" class="f-rose"/><text x="398" y="46" class="w">Wikis</text>
+      <rect x="490" y="20" width="130" height="40" rx="10" class="f-blue"/><text x="506" y="46" class="w">Papers, etc.</text>
+    </g>
+    <path d="M60 80 L240 140 L400 140 L580 80 Z" class="f-bg s-ink" stroke-width="3"/>
+    <g class="s-ink" stroke-width="2"><line x1="150" y1="110" x2="490" y2="110"/><line x1="200" y1="126" x2="440" y2="126"/></g>
+    <text x="250" y="104" font-size="16">Filter</text>
+    <g font-size="15" class="r"><text x="16" y="130" class="r">✕ Duplicates</text><text x="16" y="154" class="r">✕ Ads &amp; gibberish</text><text x="510" y="130" class="r">✕ Low quality</text><text x="510" y="154" class="r">✕ Harmful</text></g>
+    <rect x="250" y="160" width="140" height="44" rx="10" class="f-mint"/>
+    <text x="270" y="189" font-size="18" class="w">Clean text</text>
+  </svg>
+  <p>You are what you eat. <b>Data quality</b> often matters more than data quantity.</p>
+</section>
+
+<section class="panel">
+  <div class="step">STEP 2 · PRACTICE QUESTIONS</div>
+  <h2>One question, over and over: guess the next word</h2>
+  <svg viewBox="0 0 640 210" role="img" aria-label="A loop: hide, guess, check the answer, turn the knobs">
+    <g class="spin"><circle cx="320" cy="105" r="72" fill="none" class="s-line" stroke-width="3" stroke-dasharray="10 10"/></g>
+    <g font-size="17">
+      <rect x="230" y="8" width="180" height="42" rx="12" class="f-blue"/><text x="246" y="35" class="w">Hide the next word</text>
+      <rect x="410" y="76" width="226" height="58" rx="12" class="f-sun"/><text x="422" y="100" font-size="15" class="w">Guess: “Twinkle, twinkle,</text><text x="422" y="122" font-size="15" class="w">little …” → star?</text>
+      <rect x="230" y="160" width="180" height="42" rx="12" class="f-mint"/><text x="250" y="187" class="w">Check the answer</text>
+      <rect x="8" y="84" width="204" height="42" rx="12" class="f-rose"/><text x="22" y="111" class="w">Tweak by how wrong</text>
+    </g>
+    <text x="320" y="112" font-size="16" class="m" text-anchor="middle">Loop</text>
+  </svg>
+  <p>The answer key is just the original text, so <b>nobody has to write the questions or grade them</b>. That's why it can use such a massive amount of text.</p>
+</section>
+
+<section class="panel">
+  <div class="step">STEP 3 · REPEAT UNTIL THE END OF TIME</div>
+  <h2>One word, one question. Trillions of them.</h2>
+  <svg viewBox="0 0 640 200" role="img" aria-label="Rows of GPUs running day and night">
+    <g id="gpus"></g>
+    <text x="20" y="188" font-size="16" class="m">Thousands of GPUs running nonstop for weeks to months (Illustrative)</text>
+  </svg>
+  <p>This is the <b>most expensive, most power-hungry</b> part of building a model.</p>
+</section>
+
+<section class="panel">
+  <div class="step">BONUS SKILLS</div>
+  <h2>To guess well, it was forced to learn a lot</h2>
+  <svg viewBox="0 0 640 220" role="img" aria-label="Different skills needed to guess the next word">
+    <g font-size="17">
+      <text x="20" y="34">“At 100°C, water will ___”</text><text x="330" y="34" class="b">→ learns common sense</text>
+      <text x="20" y="80">“Le chat est sur le ___”</text><text x="330" y="80" class="b">→ learns grammar, other languages</text>
+      <text x="20" y="126">“3 + 5 × 2 = ___”</text><text x="330" y="126" class="b">→ learns a bit of reasoning</text>
+      <text x="20" y="172">“for i in range(___”</text><text x="330" y="172" class="b">→ learns to write code</text>
+    </g>
+    <line x1="20" y1="196" x2="620" y2="196" class="s-line" stroke-width="2"/>
+  </svg>
+  <p>Nobody taught it these on purpose. <b>They're side effects of trying to guess the next word right.</b></p>
+</section>
+
+<section class="panel">
+  <div class="step">ON GRADUATION DAY</div>
+  <h2>Knows a ton, but can't hold a conversation</h2>
+  <svg viewBox="0 0 640 220" role="img" aria-label="A base model only continues text instead of answering">
+    <rect x="20" y="20" width="380" height="54" rx="14" class="f-bg s-line" stroke-width="2"/>
+    <text x="40" y="54" font-size="19">You: What's the capital of France?</text>
+    <rect x="80" y="92" width="540" height="100" rx="14" class="f-bg s-rose" stroke-width="2"/>
+    <text x="100" y="126" font-size="18">Base model: What's the capital of Germany?</text>
+    <text x="100" y="156" font-size="18">What's the capital of Italy? …</text>
+    <text x="100" y="182" font-size="15" class="m">(It thinks this is a quiz sheet, so it keeps writing more questions)</text>
+  </svg>
+  <p>Pretraining only teaches it to <b>keep writing</b>. To “understand the question and answer it properly,” it needs <b>fine-tuning</b> afterwards.</p>
+</section>
+
+<section class="panel">
+  <div class="step">LIMITS</div>
+  <h2>The day it finishes reading, time stops</h2>
+  <svg viewBox="0 0 640 190" role="img" aria-label="Knowledge cutoff date and learned biases">
+    <line x1="30" y1="70" x2="610" y2="70" class="s-ink" stroke-width="3"/>
+    <rect x="30" y="58" width="380" height="24" rx="6" class="f-mint"/>
+    <line x1="410" y1="40" x2="410" y2="100" class="s-rose" stroke-width="4"/>
+    <text x="350" y="30" font-size="16" class="r">Knowledge cutoff</text>
+    <text x="430" y="100" font-size="16" class="m">After that: no idea</text>
+    <text x="30" y="140" font-size="18">The books have mistakes and bias → it learns those too</text>
+    <text x="30" y="172" font-size="16" class="m">Fixes: web search for new info; later training to correct behavior</text>
+  </svg>
+  <p>So when you ask about recent news, prices or rules, <b>have it search, or check for yourself</b>.</p>
+</section>
+
+<section class="sum">
+  <h2>The short version</h2>
+  <p>Pretraining = having a model read a massive amount of text and guess the next word over and over, until you get a base model that “knows a little about everything, but can't be an assistant yet.”</p>
+</section>
+</div>
+
+<script>
+(function(){
+  var g=document.getElementById('gpus'),ns='http://www.w3.org/2000/svg',c=['f-blue','f-mint','f-sun'];
+  for(var r=0;r<4;r++)for(var i=0;i<15;i++){
+    var x=20+i*40,y=12+r*40,e=document.createElementNS(ns,'rect');
+    e.setAttribute('x',x);e.setAttribute('y',y);e.setAttribute('width',32);e.setAttribute('height',32);e.setAttribute('rx',6);
+    e.setAttribute('class',c[(r*15+i)%3]);g.appendChild(e);
+    var d=document.createElementNS(ns,'circle');d.setAttribute('cx',x+25);d.setAttribute('cy',y+7);d.setAttribute('r',3);d.setAttribute('fill','#fff');g.appendChild(d);
+  }
+})();
+</script>
+
+</body>
+</html>

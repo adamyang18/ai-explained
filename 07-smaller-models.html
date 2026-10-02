@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>html{color-scheme:light}body{margin:0}img{max-width:100%}[hidden]{display:none!important}.back{font-family:var(--body);font-weight:700;color:var(--blue);text-decoration:none;font-size:15px;align-self:flex-start}.back:hover,.back:focus-visible{text-decoration:underline}</style>
+<title>Making AI Models Smaller</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600&family=Nunito:wght@400;700&display=swap">
+<style>
+/* Layout: picture-book strip; each panel = big drawing + one line + 3 detail cards */
+:root{
+  --bg:#EEF3F6; --card:#FFFFFF; --ink:#1B2A38; --muted:#5B6B7A;
+  --blue:#2E64E8; --sun:#F4A51C; --mint:#2FA67F; --rose:#E0566B; --line:#D3DDE6;
+  --display:"Fredoka","Avenir Next",system-ui,sans-serif;
+  --body:"Nunito","Avenir Next",system-ui,sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#111922; --card:#1A2531; --ink:#E6EEF5; --muted:#9AAABA;
+  --blue:#6F97FF; --sun:#F7B947; --mint:#4CC79C; --rose:#F07A8B; --line:#2C3A48; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#111922; --card:#1A2531; --ink:#E6EEF5; --muted:#9AAABA;
+  --blue:#6F97FF; --sun:#F7B947; --mint:#4CC79C; --rose:#F07A8B; --line:#2C3A48; color-scheme:dark}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:17px;line-height:1.6}
+.wrap{max-width:760px;margin:0 auto;padding-inline:16px;padding-block:40px 64px;display:flex;flex-direction:column;gap:28px}
+header h1{font-family:var(--display);font-weight:600;font-size:clamp(34px,7vw,54px);line-height:1.15;margin:0;text-wrap:balance}
+header p{color:var(--muted);margin:10px 0 0;font-size:18px}
+.panel{background:var(--card);border:2px solid var(--line);border-radius:22px;padding:22px 22px 24px;display:flex;flex-direction:column;gap:12px}
+.step{font-family:var(--display);color:var(--blue);font-size:15px;letter-spacing:.08em}
+.panel h2{font-family:var(--display);font-weight:600;font-size:clamp(24px,4.6vw,32px);margin:0;line-height:1.2;text-wrap:balance}
+.panel p{margin:0;color:var(--muted);max-width:60ch}
+.panel p b{color:var(--ink)}
+svg{width:100%;height:auto;display:block}
+svg text{font-family:var(--body);fill:var(--ink)}
+.f-blue{fill:var(--blue)} .f-sun{fill:var(--sun)} .f-mint{fill:var(--mint)} .f-rose{fill:var(--rose)} .f-line{fill:var(--line)} .f-bg{fill:var(--bg)} .f-card{fill:var(--card)}
+.s-ink{stroke:var(--ink)} .s-line{stroke:var(--line)} .s-muted{stroke:var(--muted)} .s-rose{stroke:var(--rose)} .s-mint{stroke:var(--mint)} .s-blue{stroke:var(--blue)}
+text.w{fill:#fff} text.m{fill:var(--muted)} text.b{fill:var(--blue)} text.r{fill:var(--rose)} text.g{fill:var(--mint)}
+.more{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-top:6px}
+.mc{background:var(--bg);border-radius:14px;padding:14px 16px;display:flex;flex-direction:column;gap:8px;min-width:0;font-size:15.5px}
+.mc h3{margin:0;font-family:var(--display);font-weight:600;font-size:18px;color:var(--blue)}
+.mc.warn h3{color:var(--rose)}
+.mc p{max-width:none}
+table{border-collapse:collapse;width:100%;font-size:15.5px}
+.tw{overflow-x:auto}
+th,td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-weight:700;color:var(--ink)} td{color:var(--muted)}
+.sum{background:var(--ink);color:var(--bg);border-radius:22px;padding:24px}
+.sum h2{font-family:var(--display);font-weight:600;margin:0 0 10px;font-size:28px}
+.sum ol{margin:0;padding-left:1.3em;display:flex;flex-direction:column;gap:6px}
+</style>
+<style>
+svg text.code{font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace}
+.f-ink{fill:var(--ink)} text.inv{fill:var(--bg)}
+</style>
+
+</head>
+<body>
+<div class="wrap">
+<a class="back" href="index.html">&larr; All lessons</a>
+<header>
+  <h1>Quantization, distillation, small models:<br>fitting an elephant in a fridge</h1>
+  <p>How to make models cheaper and faster, and even small enough to fit on a phone.</p>
+</header>
+
+<section class="panel">
+  <div class="step">Panel 1 · Why go small</div>
+  <h2>Big models are pricey, slow, and hard to move</h2>
+  <svg viewBox="0 0 640 200" role="img" aria-label="A big model needs a server room; a small model fits on a phone">
+    <rect x="20" y="20" width="260" height="140" rx="14" class="f-bg s-ink" stroke-width="3"/>
+    <g id="rack"></g>
+    <text x="30" y="188" font-size="16" class="m">Big model: rows of GPU servers</text>
+    <path d="M300 90 L350 90 M340 80 L352 90 L340 100" class="s-muted" stroke-width="3" fill="none"/>
+    <rect x="400" y="20" width="90" height="150" rx="16" class="f-ink"/>
+    <rect x="410" y="36" width="70" height="110" rx="6" class="f-blue"/>
+    <text x="445" y="88" font-size="15" class="w" text-anchor="middle">Small</text><text x="445" y="108" font-size="15" class="w" text-anchor="middle">model</text>
+    <text x="510" y="80" font-size="16">Phones</text><text x="510" y="106" font-size="16">Laptops</text><text x="510" y="132" font-size="16">Factory gear</text>
+  </svg>
+  <p>Three ways to shrink a model: <b>quantization</b> (less precision), <b>distillation</b> (a teacher trains a student), and <b>using a small model as a specialist</b>.</p>
+</section>
+
+<section class="panel">
+  <div class="step">Panel 2 · Quantization</div>
+  <h2>Each knob keeps fewer decimal places</h2>
+  <svg viewBox="0 0 640 220" role="img" aria-label="A high-precision number and a low-precision number">
+    <text x="10" y="36" font-size="17">Before: 0.<tspan class="b">7328915</tspan> (16-bit, 2 bytes per number)</text>
+    <text x="10" y="74" font-size="17">Quantized: 0.<tspan class="b">7</tspan> (4-bit, 0.5 byte per number)</text>
+    <text x="10" y="120" font-size="16">Size of a 7B (7 billion parameter) model:</text>
+    <rect x="10" y="134" width="480" height="30" rx="8" class="f-sun"/><text x="500" y="156" font-size="16">≈ 14 GB</text>
+    <rect x="10" y="172" width="120" height="30" rx="8" class="f-mint"/><text x="140" y="194" font-size="16">≈ 3.5 GB, runs on a normal computer</text>
+  </svg>
+  <p>7 billion × 2 bytes ≈ 14 GB; 7 billion × 0.5 byte ≈ 3.5 GB. <b>It shrinks to a quarter of the size, and usually only gets a little worse.</b></p>
+  <div class="more">
+    <div class="mc"><h3>Think of it like</h3><p>Saving a photo as a JPG. Squeeze a 20 MB original down to 2 MB and you can barely tell the difference. Only when you squeeze too hard do you get blocky pixels.</p></div>
+    <div class="mc"><h3>What’s really going on</h3><p>Quantization doesn’t need retraining. You just “compress” a model that’s already trained, which is why, soon after an open-weights model comes out, the community posts all kinds of quantized versions. Real files end up a bit bigger than this estimate because of extra metadata.</p></div>
+    <div class="mc warn"><h3>Common myth</h3><p><b>“The quantized version is just as good as the original.”</b> For everyday chat the difference is small, but precise work like math, code and long reasoning drops more noticeably. Test it on your own exam before you ship.</p></div>
+  </div>
+</section>
+
+<section class="panel">
+  <div class="step">Panel 3 · Distillation</div>
+  <h2>The teacher writes out answers, the student learns from them</h2>
+  <svg viewBox="0 0 640 220" role="img" aria-label="A big teacher model generates answers to train a small student model">
+    <circle cx="100" cy="90" r="70" class="f-blue"/>
+    <text x="100" y="86" font-size="20" class="w" text-anchor="middle">Big model</text><text x="100" y="112" font-size="16" class="w" text-anchor="middle">Teacher</text>
+    <g font-size="15">
+      <rect x="194" y="30" width="258" height="36" rx="8" class="f-bg"/><text x="206" y="54">Q1 + teacher’s answer &amp; steps</text>
+      <rect x="194" y="74" width="258" height="36" rx="8" class="f-bg"/><text x="206" y="98">Q2 + teacher’s answer &amp; steps</text>
+      <rect x="194" y="118" width="258" height="36" rx="8" class="f-bg"/><text x="206" y="142">…hundreds of thousands more</text>
+    </g>
+    <path d="M172 90 L190 90" class="s-muted" stroke-width="3"/><path d="M458 90 L486 90 M476 80 L488 90 L476 100" class="s-muted" stroke-width="3" fill="none"/>
+    <circle cx="540" cy="90" r="45" class="f-mint"/>
+    <text x="540" y="86" font-size="14" class="w" text-anchor="middle">Small model</text><text x="540" y="106" font-size="14" class="w" text-anchor="middle">Student</text>
+    <text x="10" y="200" font-size="15" class="m">Much smaller student, but strong on the kinds of problems it was shown</text>
+  </svg>
+  <p>It’s much faster than learning from scratch, because the teacher gives more than answers. It shows <b>how to solve the problem</b>.</p>
+  <div class="more">
+    <div class="mc"><h3>Example</h3><p>When DeepSeek released R1, it also released a batch of “distilled” versions: it used reasoning data generated by R1 to train small models built on Qwen and Llama, giving those small models some reasoning ability too.</p></div>
+    <div class="mc"><h3>What’s really going on</h3><p>A distilled student is usually lopsided: great at the problem types the teacher showed it, weak at the ones it didn’t. So you pick the practice problems to match what you actually need.</p></div>
+    <div class="mc warn"><h3>Heads up</h3><p>Many closed models’ terms of use ban using their output to train a competing model. Before distilling, check the teacher model’s license.</p></div>
+  </div>
+</section>
+
+<section class="panel">
+  <div class="step">Panel 4 · Small models as specialists</div>
+  <h2>You don’t need a professor to sort the mail</h2>
+  <svg viewBox="0 0 640 200" role="img" aria-label="A router sends easy tasks to a small model and hard ones to a big model">
+    <rect x="10" y="70" width="130" height="60" rx="14" class="f-ink"/><text x="75" y="106" font-size="16" class="inv" text-anchor="middle">All requests</text>
+    <rect x="200" y="70" width="110" height="60" rx="30" class="f-sun"/><text x="255" y="106" font-size="17" class="w" text-anchor="middle">Router</text>
+    <path d="M144 100 L196 100" class="s-muted" stroke-width="3"/>
+    <path d="M314 90 L380 45" class="s-muted" stroke-width="3"/><path d="M314 110 L380 155" class="s-muted" stroke-width="3"/>
+    <rect x="390" y="15" width="240" height="60" rx="14" class="f-mint"/><text x="406" y="42" font-size="16" class="w">Small model: ~80%</text><text x="406" y="64" font-size="14" class="w">Sorting, extracting, FAQs</text>
+    <rect x="390" y="125" width="240" height="60" rx="14" class="f-blue"/><text x="406" y="152" font-size="16" class="w">Big model: the hard rest</text><text x="406" y="174" font-size="14" class="w">Tough reasoning, rare cases</text>
+  </svg>
+  <p>The split is illustrative. The idea is to <b>route by difficulty</b>: the bill can drop a lot while quality barely moves.</p>
+</section>
+
+<section class="panel">
+  <div class="step">Panel 5 · On-device AI</div>
+  <h2>The model runs right on your device</h2>
+  <div class="tw"><table>
+    <tr><th>Upside</th><th>Downside</th></tr>
+    <tr><td>Works without internet</td><td>Weaker than big cloud models</td></tr>
+    <tr><td>Data never leaves the device, so better privacy</td><td>Uses battery, heats up, takes memory</td></tr>
+    <tr><td>No network delay, so it reacts fast</td><td>Updating the model means pushing a new version</td></tr>
+    <tr><td>No pay-per-use bill</td><td>Has to be tuned for each kind of chip</td></tr>
+  </table></div>
+  <p>A common setup for phone makers’ AI features: <b>simple stuff happens on the phone, harder stuff goes to the cloud</b>.</p>
+</section>
+
+<section class="sum">
+  <h2>Remember this</h2>
+  <ol>
+    <li><b>Quantization</b>: knobs keep fewer decimal places, the model gets several times smaller, quality drops a little</li>
+    <li><b>Distillation</b>: the big model writes out problems and reasoning, the small model learns from them</li>
+    <li><b>Small models</b>: specialists that handle simple, frequent jobs</li>
+    <li><b>Routing</b>: split by difficulty; mixing big and small models saves the most</li>
+    <li>Whenever you shrink a model, test it on your own exam before it goes live</li>
+  </ol>
+</section>
+</div>
+<script>
+(function(){var g=document.getElementById('rack'),ns='http://www.w3.org/2000/svg';
+for(var r=0;r<3;r++)for(var i=0;i<6;i++){var e=document.createElementNS(ns,'rect');e.setAttribute('x',38+i*38);e.setAttribute('y',36+r*40);e.setAttribute('width',30);e.setAttribute('height',30);e.setAttribute('rx',5);e.setAttribute('class',['f-blue','f-sun','f-mint'][(r+i)%3]);g.appendChild(e);}})();
+</script>
+
+</body>
+</html>

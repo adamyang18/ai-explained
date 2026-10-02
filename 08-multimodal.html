@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>html{color-scheme:light}body{margin:0}img{max-width:100%}[hidden]{display:none!important}.back{font-family:var(--body);font-weight:700;color:var(--blue);text-decoration:none;font-size:15px;align-self:flex-start}.back:hover,.back:focus-visible{text-decoration:underline}</style>
+<title>Multimodal AI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600&family=Nunito:wght@400;700&display=swap">
+<style>
+/* Layout: picture-book strip; each panel = big drawing + one line + 3 detail cards */
+:root{
+  --bg:#EEF3F6; --card:#FFFFFF; --ink:#1B2A38; --muted:#5B6B7A;
+  --blue:#2E64E8; --sun:#F4A51C; --mint:#2FA67F; --rose:#E0566B; --line:#D3DDE6;
+  --display:"Fredoka","Avenir Next",system-ui,sans-serif;
+  --body:"Nunito","Avenir Next",system-ui,sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#111922; --card:#1A2531; --ink:#E6EEF5; --muted:#9AAABA;
+  --blue:#6F97FF; --sun:#F7B947; --mint:#4CC79C; --rose:#F07A8B; --line:#2C3A48; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#111922; --card:#1A2531; --ink:#E6EEF5; --muted:#9AAABA;
+  --blue:#6F97FF; --sun:#F7B947; --mint:#4CC79C; --rose:#F07A8B; --line:#2C3A48; color-scheme:dark}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:17px;line-height:1.6}
+.wrap{max-width:760px;margin:0 auto;padding-inline:16px;padding-block:40px 64px;display:flex;flex-direction:column;gap:28px}
+header h1{font-family:var(--display);font-weight:600;font-size:clamp(34px,7vw,54px);line-height:1.15;margin:0;text-wrap:balance}
+header p{color:var(--muted);margin:10px 0 0;font-size:18px}
+.panel{background:var(--card);border:2px solid var(--line);border-radius:22px;padding:22px 22px 24px;display:flex;flex-direction:column;gap:12px}
+.step{font-family:var(--display);color:var(--blue);font-size:15px;letter-spacing:.08em}
+.panel h2{font-family:var(--display);font-weight:600;font-size:clamp(24px,4.6vw,32px);margin:0;line-height:1.2;text-wrap:balance}
+.panel p{margin:0;color:var(--muted);max-width:60ch}
+.panel p b{color:var(--ink)}
+svg{width:100%;height:auto;display:block}
+svg text{font-family:var(--body);fill:var(--ink)}
+.f-blue{fill:var(--blue)} .f-sun{fill:var(--sun)} .f-mint{fill:var(--mint)} .f-rose{fill:var(--rose)} .f-line{fill:var(--line)} .f-bg{fill:var(--bg)} .f-card{fill:var(--card)}
+.s-ink{stroke:var(--ink)} .s-line{stroke:var(--line)} .s-muted{stroke:var(--muted)} .s-rose{stroke:var(--rose)} .s-mint{stroke:var(--mint)} .s-blue{stroke:var(--blue)}
+text.w{fill:#fff} text.m{fill:var(--muted)} text.b{fill:var(--blue)} text.r{fill:var(--rose)} text.g{fill:var(--mint)}
+.more{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-top:6px}
+.mc{background:var(--bg);border-radius:14px;padding:14px 16px;display:flex;flex-direction:column;gap:8px;min-width:0;font-size:15.5px}
+.mc h3{margin:0;font-family:var(--display);font-weight:600;font-size:18px;color:var(--blue)}
+.mc.warn h3{color:var(--rose)}
+.mc p{max-width:none}
+table{border-collapse:collapse;width:100%;font-size:15.5px}
+.tw{overflow-x:auto}
+th,td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-weight:700;color:var(--ink)} td{color:var(--muted)}
+.sum{background:var(--ink);color:var(--bg);border-radius:22px;padding:24px}
+.sum h2{font-family:var(--display);font-weight:600;margin:0 0 10px;font-size:28px}
+.sum ol{margin:0;padding-left:1.3em;display:flex;flex-direction:column;gap:6px}
+</style>
+<style>
+svg text.code{font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace}
+.f-ink{fill:var(--ink)} text.inv{fill:var(--bg)}
+</style>
+
+</head>
+<body>
+<div class="wrap">
+<a class="back" href="index.html">&larr; All lessons</a>
+<header>
+  <h1>Multimodal AI:<br>AI grows eyes and ears</h1>
+  <p>One model that handles text, images, sound and video all at once.</p>
+</header>
+
+<section class="panel">
+  <div class="step">Panel 1 · What it is</div>
+  <h2>It doesn't just read. It can see, hear and talk</h2>
+  <svg viewBox="0 0 640 220" role="img" aria-label="Different kinds of input going into one model">
+    <g font-size="17">
+      <rect x="10" y="10" width="140" height="44" rx="12" class="f-blue"/><text x="50" y="38" class="w">Text</text>
+      <rect x="10" y="62" width="140" height="44" rx="12" class="f-sun"/><text x="50" y="90" class="w">Images</text>
+      <rect x="10" y="114" width="140" height="44" rx="12" class="f-mint"/><text x="50" y="142" class="w">Voice</text>
+      <rect x="10" y="166" width="140" height="44" rx="12" class="f-rose"/><text x="50" y="194" class="w">Video</text>
+    </g>
+    <g class="s-muted" stroke-width="3"><line x1="154" y1="32" x2="250" y2="100"/><line x1="154" y1="84" x2="250" y2="104"/><line x1="154" y1="136" x2="250" y2="112"/><line x1="154" y1="188" x2="250" y2="118"/></g>
+    <circle cx="320" cy="110" r="70" class="f-ink"/><text x="320" y="117" font-size="20" text-anchor="middle" class="inv">One model</text>
+    <path d="M394 110 L440 110 M430 100 L442 110 L430 120" class="s-muted" stroke-width="3" fill="none"/>
+    <text x="460" y="80" font-size="16">Text answer</text><text x="460" y="112" font-size="16">Spoken answer</text><text x="460" y="144" font-size="16">New image</text>
+  </svg>
+  <p>A “mode” (or modality) is just a form of information. <b>Multimodal</b> = can handle more than one form.</p>
+</section>
+
+<section class="panel">
+  <div class="step">Panel 2 · How a picture gets in</div>
+  <h2>Pictures get chopped into “building blocks” too</h2>
+  <svg viewBox="0 0 640 210" role="img" aria-label="A picture cut into small squares, each turned into a list of numbers">
+    <g id="grid"></g>
+    <text x="30" y="200" font-size="15" class="m">Picture cut into squares</text>
+    <path d="M230 100 L280 100 M270 90 L282 100 L270 110" class="s-muted" stroke-width="3" fill="none"/>
+    <g font-size="14" class="m"><text x="300" y="50" class="m">[0.3, -0.1, 0.8 …]</text><text x="300" y="78" class="m">[0.7, 0.2, -0.5 …]</text><text x="300" y="106" class="m">[-0.4, 0.9, 0.1 …]</text><text x="300" y="134" class="m">…</text></g>
+    <text x="300" y="178" font-size="15" class="m">Each square becomes a list of numbers,</text>
+    <text x="300" y="200" font-size="15" class="m">lined up right next to the word blocks</text>
+  </svg>
+  <p>What the model actually sees is one long line of <b>picture blocks + word blocks</b>. Then it does what it always does best: make sense of it and predict what comes next.</p>
+  <div class="more">
+    <div class="mc"><h3>Think of it like</h3><p>A jigsaw puzzle. The picture is broken into small pieces, each with its own number and features. The model looks at those pieces together with your question.</p></div>
+    <div class="mc"><h3>What's really going on</h3><p>The bigger and sharper the picture, the more blocks it turns into, and <b>the more context space and money it costs</b>. Video is a stream of pictures plus sound, so it's even pricier. Usually the model only samples some of the frames.</p></div>
+    <div class="mc warn"><h3>Common myth</h3><p><b>“It sees pictures the way people do.”</b> It understands images in a very different way. Some things you'd spot in a second, it gets wrong. See Panel 5.</p></div>
+  </div>
+</section>
+
+<section class="panel">
+  <div class="step">Panel 3 · What it can do</div>
+  <h2>The most common real-world jobs</h2>
+  <div class="tw"><table>
+    <tr><th>Job</th><th>Example</th></tr>
+    <tr><td><b>Reading documents</b></td><td>Snap a photo of an invoice, receipt or customs form → it pulls out the amount, date and item names</td></tr>
+    <tr><td><b>Reading charts</b></td><td>Screenshot a report → “Sum up which channel dropped the most this quarter”</td></tr>
+    <tr><td><b>Reading screens</b></td><td>Screenshot of an app → find out why it's showing an error; AI agents operate a computer by looking at the screen</td></tr>
+    <tr><td><b>Live voice</b></td><td>Phone customer service, speaking practice, live translation</td></tr>
+    <tr><td><b>Quality checks</b></td><td>Product photo → mark scratches or missing parts</td></tr>
+    <tr><td><b>Making content</b></td><td>Product shots, ad images, voiceovers (usually done with special generation models)</td></tr>
+  </table></div>
+  <p>Snapping a photo of a math problem and asking for a hint is a multimodal app too.</p>
+</section>
+
+<section class="panel">
+  <div class="step">Panel 4 · How voice changed</div>
+  <h2>From a three-person relay to one smooth move</h2>
+  <svg viewBox="0 0 640 240" role="img" aria-label="The old three-step voice pipeline versus the new all-in-one voice model">
+    <text x="10" y="28" font-size="17">Before</text>
+    <g font-size="15">
+      <rect x="10" y="40" width="170" height="50" rx="10" class="f-bg s-line" stroke-width="2"/><text x="26" y="71">Speech → text</text>
+      <rect x="200" y="40" width="170" height="50" rx="10" class="f-bg s-line" stroke-width="2"/><text x="216" y="71">Text → AI reply</text>
+      <rect x="390" y="40" width="170" height="50" rx="10" class="f-bg s-line" stroke-width="2"/><text x="406" y="71">Text → speech</text>
+    </g>
+    <text x="10" y="116" font-size="14" class="m">Slow, and tone, feelings and pauses got lost when it became text</text>
+    <text x="10" y="156" font-size="17">Now</text>
+    <rect x="10" y="168" width="550" height="64" rx="10" class="f-blue"/>
+    <text x="26" y="195" font-size="15" class="w">Voice in → one model listens and talks directly → voice out</text>
+    <text x="26" y="219" font-size="15" class="w">It can hear your tone, and you can cut it off mid-sentence</text>
+  </svg>
+  <p>That's why today's voice assistants are <b>faster and sound more human</b>. They can even tell if you're unsure or in a hurry.</p>
+</section>
+
+<section class="panel">
+  <div class="step">Panel 5 · Limits</div>
+  <h2>It can see, but it doesn't always see right</h2>
+  <svg viewBox="0 0 640 200" role="img" aria-label="Common mistakes multimodal models make">
+    <g font-size="17">
+      <rect x="10" y="10" width="305" height="80" rx="14" class="f-bg"/><text x="28" y="44">Counting</text><text x="28" y="72" font-size="15" class="m">17 people in the photo, it says 15</text>
+      <rect x="325" y="10" width="305" height="80" rx="14" class="f-bg"/><text x="343" y="44">Tiny text</text><text x="343" y="72" font-size="15" class="m">Guesses blurry text, sure of itself</text>
+      <rect x="10" y="100" width="305" height="80" rx="14" class="f-bg"/><text x="28" y="134">Where things are</text><text x="28" y="162" font-size="15" class="m">Left/right, front/back, what's hidden</text>
+      <rect x="325" y="100" width="305" height="80" rx="14" class="f-bg"/><text x="343" y="134">Split-second details</text><text x="343" y="162" font-size="15" class="m">Sampled frames miss the key moment</text>
+    </g>
+  </svg>
+  <p>Pictures can make AI “hallucinate” too. For things like <b>amounts, counts and key frames</b>, a person should double-check.</p>
+  <div class="more">
+    <div class="mc"><h3>Why this matters to you</h3><p>When AI looks at a pitching video, it usually samples only a few frames per second, so it can miss the exact moment of release. That's why claims about one split-second (like where your hand was at release) should be checked frame by frame in the original video.</p></div>
+    <div class="mc"><h3>What's really going on</h3><p>When a model handles video, it usually grabs just a few frames each second. It never actually sees the motion in between. Its description might be “filled in” from the frames before and after.</p></div>
+    <div class="mc warn"><h3>Common myth</h3><p><b>“Giving it a screenshot is the same as giving it the data.”</b> If you can get the original table or text, skip the screenshot. The raw data is more accurate and uses fewer tokens.</p></div>
+  </div>
+</section>
+
+<section class="sum">
+  <h2>The short version</h2>
+  <ol>
+    <li><b>Multimodal</b> = one model that handles text, images, sound and video</li>
+    <li>Pictures and sound get chopped into blocks too, lined up with the words</li>
+    <li>Most common uses: reading documents, charts and screens, plus live voice</li>
+    <li>Voice went from a three-step relay to one smooth move: faster and more human</li>
+    <li>Counting, tiny text, positions and split-second details trip it up, so a person should check key answers</li>
+  </ol>
+</section>
+</div>
+<script>
+(function(){var g=document.getElementById('grid'),ns='http://www.w3.org/2000/svg',c=['f-blue','f-sun','f-mint','f-rose','f-line'];
+for(var r=0;r<4;r++)for(var i=0;i<4;i++){var e=document.createElementNS(ns,'rect');e.setAttribute('x',30+i*42);e.setAttribute('y',20+r*42);e.setAttribute('width',38);e.setAttribute('height',38);e.setAttribute('rx',4);e.setAttribute('class',c[(r*3+i*2)%5]);g.appendChild(e);}})();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,177 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>html{color-scheme:light}body{margin:0}img{max-width:100%}[hidden]{display:none!important}.back{font-family:var(--body);font-weight:700;color:var(--blue);text-decoration:none;font-size:15px;align-self:flex-start}.back:hover,.back:focus-visible{text-decoration:underline}</style>
+<title>What AI Costs</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600&family=Nunito:wght@400;700&display=swap">
+<style>
+/* Layout: picture-book strip; each panel = big drawing + one line + 3 detail cards */
+:root{
+  --bg:#EEF3F6; --card:#FFFFFF; --ink:#1B2A38; --muted:#5B6B7A;
+  --blue:#2E64E8; --sun:#F4A51C; --mint:#2FA67F; --rose:#E0566B; --line:#D3DDE6;
+  --display:"Fredoka","Avenir Next",system-ui,sans-serif;
+  --body:"Nunito","Avenir Next",system-ui,sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#111922; --card:#1A2531; --ink:#E6EEF5; --muted:#9AAABA;
+  --blue:#6F97FF; --sun:#F7B947; --mint:#4CC79C; --rose:#F07A8B; --line:#2C3A48; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#111922; --card:#1A2531; --ink:#E6EEF5; --muted:#9AAABA;
+  --blue:#6F97FF; --sun:#F7B947; --mint:#4CC79C; --rose:#F07A8B; --line:#2C3A48; color-scheme:dark}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:17px;line-height:1.6}
+.wrap{max-width:760px;margin:0 auto;padding-inline:16px;padding-block:40px 64px;display:flex;flex-direction:column;gap:28px}
+header h1{font-family:var(--display);font-weight:600;font-size:clamp(34px,7vw,54px);line-height:1.15;margin:0;text-wrap:balance}
+header p{color:var(--muted);margin:10px 0 0;font-size:18px}
+.panel{background:var(--card);border:2px solid var(--line);border-radius:22px;padding:22px 22px 24px;display:flex;flex-direction:column;gap:12px}
+.step{font-family:var(--display);color:var(--blue);font-size:15px;letter-spacing:.08em}
+.panel h2{font-family:var(--display);font-weight:600;font-size:clamp(24px,4.6vw,32px);margin:0;line-height:1.2;text-wrap:balance}
+.panel p{margin:0;color:var(--muted);max-width:60ch}
+.panel p b{color:var(--ink)}
+svg{width:100%;height:auto;display:block}
+svg text{font-family:var(--body);fill:var(--ink)}
+.f-blue{fill:var(--blue)} .f-sun{fill:var(--sun)} .f-mint{fill:var(--mint)} .f-rose{fill:var(--rose)} .f-line{fill:var(--line)} .f-bg{fill:var(--bg)} .f-card{fill:var(--card)}
+.s-ink{stroke:var(--ink)} .s-line{stroke:var(--line)} .s-muted{stroke:var(--muted)} .s-rose{stroke:var(--rose)} .s-mint{stroke:var(--mint)} .s-blue{stroke:var(--blue)}
+text.w{fill:#fff} text.m{fill:var(--muted)} text.b{fill:var(--blue)} text.r{fill:var(--rose)} text.g{fill:var(--mint)}
+.more{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-top:6px}
+.mc{background:var(--bg);border-radius:14px;padding:14px 16px;display:flex;flex-direction:column;gap:8px;min-width:0;font-size:15.5px}
+.mc h3{margin:0;font-family:var(--display);font-weight:600;font-size:18px;color:var(--blue)}
+.mc.warn h3{color:var(--rose)}
+.mc p{max-width:none}
+table{border-collapse:collapse;width:100%;font-size:15.5px}
+.tw{overflow-x:auto}
+th,td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-weight:700;color:var(--ink)} td{color:var(--muted)}
+.sum{background:var(--ink);color:var(--bg);border-radius:22px;padding:24px}
+.sum h2{font-family:var(--display);font-weight:600;margin:0 0 10px;font-size:28px}
+.sum ol{margin:0;padding-left:1.3em;display:flex;flex-direction:column;gap:6px}
+</style>
+<style>
+svg text.code{font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace}
+.f-ink{fill:var(--ink)} text.inv{fill:var(--bg)}
+</style>
+
+</head>
+<body>
+<div class="wrap">
+<a class="back" href="index.html">&larr; All lessons</a>
+<header>
+  <h1>What AI costs:<br>tokens, prices and speed</h1>
+  <p>The three things anyone asks before deciding if AI is worth the money.</p>
+</header>
+
+<section class="panel">
+  <div class="step">Panel 1 · How you get charged</div>
+  <h2>You pay per building block, and reading and writing are priced separately</h2>
+  <svg viewBox="0 0 640 210" role="img" aria-label="Input tokens and output tokens are priced separately">
+    <rect x="10" y="30" width="330" height="110" rx="16" class="f-bg s-line" stroke-width="2"/>
+    <text x="30" y="66" font-size="19">Input (what it reads)</text>
+    <text x="30" y="98" font-size="15" class="m">Your question + docs + chat history</text>
+    <text x="30" y="124" font-size="15" class="m">+ system instructions</text>
+    <rect x="360" y="30" width="270" height="110" rx="16" class="f-blue"/>
+    <text x="380" y="66" font-size="19" class="w">Output (what it writes)</text>
+    <text x="380" y="98" font-size="15" class="w">The answer + its thinking notes</text>
+    <text x="380" y="124" font-size="15" class="w">Usually several times pricier</text>
+    <text x="10" y="180" font-size="16">Prices are usually quoted as “dollars per million tokens”</text>
+  </svg>
+  <p>Writing costs more than reading, because output has to be produced <b>one token at a time</b>, while input can be processed all at once, in parallel.</p>
+</section>
+
+<section class="panel">
+  <div class="step">Panel 2 · Do the math</div>
+  <h2>How much does a customer-service bot cost per month?</h2>
+  <div class="tw"><table>
+    <tr><th>Item</th><th>Assumption</th><th>Math</th><th>Monthly cost</th></tr>
+    <tr><td>Chats</td><td>100,000 per month</td><td></td><td></td></tr>
+    <tr><td>Input</td><td>2,000 tokens per chat<br>$3 per million</td><td>200M × $3 ÷ 1M</td><td>$600</td></tr>
+    <tr><td>Output</td><td>500 tokens per chat<br>$15 per million</td><td>50M × $15 ÷ 1M</td><td>$750</td></tr>
+    <tr><td><b>Total</b></td><td></td><td></td><td><b>$1,350</b></td></tr>
+  </table></div>
+  <p>The prices are made-up values for the demo. Real prices vary a lot between companies and models. <b>The method matters more than the numbers</b>: number of chats × tokens per chat × price.</p>
+  <div class="more">
+    <div class="mc"><h3>Think of it like</h3><p>A taxi meter: there’s a base fare (the system instructions and docs it reads every single time) plus a per-kilometre charge (how long the answer is).</p></div>
+    <div class="mc"><h3>Easy to forget</h3><p>Docs that RAG stuffs in, chat history that gets re-sent every turn, a reasoning model’s thinking notes, and the input at every step of an agent’s loop. These are often much bigger than the question and answer the user actually sees.</p></div>
+    <div class="mc warn"><h3>Common myth</h3><p><b>“The model bill is the whole cost.”</b> There’s also the people: building the system, cleaning up data, testing and keeping it running. In company projects, that part is often bigger.</p></div>
+  </div>
+</section>
+
+<section class="panel">
+  <div class="step">Panel 3 · Two numbers for speed</div>
+  <h2>How long until it starts talking, and how fast it talks</h2>
+  <svg viewBox="0 0 640 200" role="img" aria-label="Time to first token and output speed per second">
+    <line x1="30" y1="100" x2="610" y2="100" class="s-line" stroke-width="2"/>
+    <circle cx="40" cy="100" r="8" class="f-ink"/><text x="20" y="80" font-size="15">Ask</text>
+    <rect x="50" y="88" width="160" height="24" rx="6" class="f-sun"/>
+    <text x="70" y="140" font-size="16">① First-word wait</text><text x="70" y="164" font-size="14" class="m">Time until it starts</text>
+    <g id="toks"></g>
+    <text x="280" y="140" font-size="16">② Output speed</text><text x="280" y="164" font-size="14" class="m">Tokens per second</text>
+    <text x="10" y="196" font-size="15" class="m">Live voice and support chat need ① short; long reports care more about ②</text>
+  </svg>
+  <p>The bigger the model, the more it thinks, and the more docs you stuff in, <b>the worse both numbers get</b>.</p>
+</section>
+
+<section class="panel">
+  <div class="step">Panel 4 · Quality, speed, cost</div>
+  <h2>You can usually only pick two</h2>
+  <svg viewBox="0 0 640 250" role="img" aria-label="Triangle of quality, speed and cost">
+    <polygon points="320,20 560,220 80,220" class="f-bg s-ink" stroke-width="3"/>
+    <circle cx="320" cy="20" r="12" class="f-blue"/><text x="340" y="28" font-size="18">Quality</text><text x="372" y="52" font-size="14" class="m">big model, more thinking</text>
+    <circle cx="80" cy="220" r="12" class="f-mint"/><text x="10" y="248" font-size="18">Speed</text>
+    <circle cx="560" cy="220" r="12" class="f-sun"/><text x="520" y="248" font-size="18">Low cost</text>
+    <circle cx="300" cy="150" r="9" class="f-rose"/><text x="200" y="178" font-size="15" class="r">Each business finds its own spot</text>
+  </svg>
+  <p>A good setup <b>isn’t the strongest model</b>. It’s the fastest, cheapest combo that still passes the test.</p>
+</section>
+
+<section class="panel">
+  <div class="step">Panel 5 · Four ways to save</div>
+  <h2>Same results, very different bills</h2>
+  <svg viewBox="0 0 640 250" role="img" aria-label="Caching, routing, batching, trimming the context">
+    <g font-size="17">
+      <rect x="10" y="10" width="305" height="105" rx="16" class="f-blue"/>
+      <text x="28" y="44" class="w">① Caching</text><text x="28" y="74" font-size="15" class="w">Save long prompts you resend</text><text x="28" y="98" font-size="15" class="w">every time; rereads cost less</text>
+      <rect x="325" y="10" width="305" height="105" rx="16" class="f-sun"/>
+      <text x="343" y="44" class="w">② Routing</text><text x="343" y="74" font-size="15" class="w">Easy questions → small model</text><text x="343" y="98" font-size="15" class="w">Only hard ones get the big one</text>
+      <rect x="10" y="125" width="305" height="105" rx="16" class="f-mint"/>
+      <text x="28" y="159" class="w">③ Batching</text><text x="28" y="189" font-size="15" class="w">Bundle up tasks that can wait</text><text x="28" y="213" font-size="15" class="w">Slower, but usually discounted</text>
+      <rect x="325" y="125" width="305" height="105" rx="16" class="f-rose"/>
+      <text x="343" y="159" class="w">④ Trim the context</text><text x="343" y="189" font-size="15" class="w">Only pass the most relevant docs</text><text x="343" y="213" font-size="15" class="w">Shrink old chat into a summary</text>
+    </g>
+  </svg>
+  <p>The exact discounts differ by company. Check their official price list at the time.</p>
+</section>
+
+<section class="panel">
+  <div class="step">Panel 6 · Is it worth it?</div>
+  <h2>Don’t just quote the AI bill. Compare it to people.</h2>
+  <svg viewBox="0 0 640 200" role="img" aria-label="AI cost compared with the cost of doing it by hand">
+    <text x="10" y="30" font-size="17">The equation that really matters</text>
+    <rect x="10" y="50" width="620" height="60" rx="14" class="f-bg"/>
+    <text x="30" y="88" font-size="17">AI cost per job + human check  <tspan class="b" font-weight="700">vs</tspan>  all-human cost per job</text>
+    <text x="10" y="146" font-size="16">Plus: faster replies, open 24/7, no extra hires at rush hour</text>
+    <text x="10" y="176" font-size="15" class="m">Prices for the same ability keep falling, so redo early estimates often</text>
+  </svg>
+  <p>Once the cost is clear, the next step goes back to <b>Evals</b>: proving you saved money without the quality dropping.</p>
+</section>
+
+<section class="sum">
+  <h2>Remember this</h2>
+  <ol>
+    <li>You pay per token; input and output are priced separately, and output costs more</li>
+    <li>Monthly cost = calls × tokens per call × price. Don’t forget docs, history and thinking notes</li>
+    <li>Speed comes down to two numbers: how soon it starts and how fast it talks</li>
+    <li>Quality, speed, cost: pick two. Once it passes the test, pick the cheapest</li>
+    <li>To judge if it’s worth it, compare with the cost of people doing the work</li>
+  </ol>
+</section>
+</div>
+<script>
+(function(){var g=document.getElementById('toks'),ns='http://www.w3.org/2000/svg';
+for(var i=0;i<16;i++){var r=document.createElementNS(ns,'rect');r.setAttribute('x',220+i*24);r.setAttribute('y',90);r.setAttribute('width',18);r.setAttribute('height',20);r.setAttribute('rx',4);r.setAttribute('class','f-blue');g.appendChild(r);}})();
+</script>
+
+</body>
+</html>
